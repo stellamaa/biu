@@ -45,7 +45,7 @@ export function SiteHeader({
  
  
   return (
-    <header className="grid shrink-0 grid-cols-3 items-center px-5 py-4">
+    <header className="grid shrink-0 grid-cols-3 items-center px-5 py-3">
       <Link href="/" className={`text-sm ${textClass} ${hoverClass}`}>
         {t('projects')}
       </Link>

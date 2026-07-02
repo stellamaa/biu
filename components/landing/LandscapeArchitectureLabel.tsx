@@ -5,11 +5,13 @@ import {useLanguage} from './LanguageProvider'
 type LandscapeArchitectureLabelProps = {
   variant: 'desktop' | 'mobile'
   theme?: 'light' | 'about'
+  overlay?: boolean
 }
 
 export function LandscapeArchitectureLabel({
   variant,
   theme = 'light',
+  overlay = false,
 }: LandscapeArchitectureLabelProps) {
   const {t} = useLanguage()
   const colorClass =
@@ -25,8 +27,10 @@ export function LandscapeArchitectureLabel({
 
   return (
     <footer
-      className={`shrink-0 py-5 text-center ${
-        theme === 'about' ? '' : 'border-t border-black/5'
+      className={`text-center ${
+        overlay
+          ? 'pointer-events-none absolute inset-x-0 bottom-0 bg-transparent pb-5 pt-10'
+          : `shrink-0 py-5 ${theme === 'about' ? '' : 'border-t border-black/5'}`
       }`}
     >
       <p className={`text-sm tracking-wide ${colorClass}`}>

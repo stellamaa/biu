@@ -61,39 +61,45 @@ export function MobileLanding({projects}: MobileLandingProps) {
   return (
     <div className="flex h-dvh flex-col lg:hidden">
       <SiteHeader variant="mobile" theme="light" currentPage="home" />
-      <ProjectHeroImage project={activeProject} variant="mobile" priority />
-      <ul
-        ref={listRef}
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
-      >
-        {projects.length > 0 ? (
-          projects.map((project, index) => (
-            <ProjectListItem
-              key={project._id}
-              project={project}
-              index={index}
-              isActive={project._id === activeId}
-              variant="mobile"
-              onActivate={() => {
-                setActiveId(project._id)
-                itemRefs.current.get(project._id)?.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start',
-                })
-              }}
-              ref={(node) => {
-                if (node) itemRefs.current.set(project._id, node)
-                else itemRefs.current.delete(project._id)
-              }}
-            />
-          ))
-        ) : (
-          <li className="px-5 py-8">
-            <p className="text-sm text-neutral-300">No projects published yet.</p>
-          </li>
-        )}
-      </ul>
-      <LandscapeArchitectureLabel variant="mobile" />
+      <div className="shrink-0 px-5 pt-1">
+        <ProjectHeroImage project={activeProject} variant="mobile" priority />
+      </div>
+      <div className="relative min-h-0 flex-1">
+        <ul
+          ref={listRef}
+          className="h-full overflow-y-auto overscroll-contain pb-14"
+        >
+          {projects.length > 0 ? (
+            projects.map((project, index) => (
+              <ProjectListItem
+                key={project._id}
+                project={project}
+                index={index}
+                isActive={project._id === activeId}
+                variant="mobile"
+                onActivate={() => {
+                  setActiveId(project._id)
+                  itemRefs.current.get(project._id)?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  })
+                }}
+                ref={(node) => {
+                  if (node) itemRefs.current.set(project._id, node)
+                  else itemRefs.current.delete(project._id)
+                }}
+              />
+            ))
+          ) : (
+            <li className="px-5 py-8">
+              <p className="text-sm text-neutral-300">
+                No projects published yet.
+              </p>
+            </li>
+          )}
+        </ul>
+        <LandscapeArchitectureLabel variant="mobile" overlay />
+      </div>
     </div>
   )
 }
