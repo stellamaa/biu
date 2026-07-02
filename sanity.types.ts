@@ -39,9 +39,6 @@ export type AboutPage = {
   aboutBiuTitle?: string;
   biuFoundedYear?: string;
   biuDescription?: string;
-  aboutBasiTitle?: string;
-  basiFoundedYear?: string;
-  basiDescription?: string;
   email?: string;
   telephone1?: string;
   telephone2?: string;
@@ -401,7 +398,7 @@ export type ProjectByIdQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: aboutPageQuery
-// Query: *[_type == "aboutPage" && _id == "aboutPage"][0] {    _id,    _type,    _createdAt,    _updatedAt,    aboutBiuTitle,    biuFoundedYear,    biuDescription,    aboutBasiTitle,    basiFoundedYear,    basiDescription,    email,    telephone1,    telephone2,    aboutImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
+// Query: *[_type == "aboutPage" && _id == "aboutPage"][0] {    _id,    _type,    _createdAt,    _updatedAt,    aboutBiuTitle,    biuFoundedYear,    biuDescription,    email,    telephone1,    telephone2,    aboutImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
 export type AboutPageQueryResult = {
   _id: "aboutPage";
   _type: "aboutPage";
@@ -410,9 +407,6 @@ export type AboutPageQueryResult = {
   aboutBiuTitle: string | null;
   biuFoundedYear: string | null;
   biuDescription: string | null;
-  aboutBasiTitle: string | null;
-  basiFoundedYear: string | null;
-  basiDescription: string | null;
   email: string | null;
   telephone1: string | null;
   telephone2: string | null;
@@ -441,6 +435,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "project"] | order(_createdAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    location,\n    size,\n    year,\n    description,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectsQueryResult;
     '\n  *[_type == "project" && _id == $id][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    location,\n    size,\n    year,\n    description,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectByIdQueryResult;
-    '\n  *[_type == "aboutPage" && _id == "aboutPage"][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    aboutBiuTitle,\n    biuFoundedYear,\n    biuDescription,\n    aboutBasiTitle,\n    basiFoundedYear,\n    basiDescription,\n    email,\n    telephone1,\n    telephone2,\n    aboutImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    }\n  }\n': AboutPageQueryResult;
+    '\n  *[_type == "aboutPage" && _id == "aboutPage"][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    aboutBiuTitle,\n    biuFoundedYear,\n    biuDescription,\n    email,\n    telephone1,\n    telephone2,\n    aboutImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    }\n  }\n': AboutPageQueryResult;
   }
 }

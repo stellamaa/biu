@@ -1,6 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import {forwardRef} from 'react'
+import {useRouter} from 'next/navigation'
 import {useLanguage} from './LanguageProvider'
 import type {Project} from '@/types/schema'
 
@@ -17,12 +19,18 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
     {project, index, isActive, variant, onActivate},
     ref,
   ) {
+    const router = useRouter()
     const {t} = useLanguage()
     const title = project.title ?? 'Untitled'
     const inProgress =
       project.finalizado === false
         ? ` (${t('inProgress')})`
         : ''
+    const projectHref = `/projects/${encodeURIComponent(project._id)}`
+
+    const goToProject = () => {
+      router.push(projectHref)
+    }
 
     if (variant === 'desktop') {
       const colorClass = isActive
@@ -31,12 +39,12 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
 
       return (
         <li ref={ref}>
-          <button
-            type="button"
+          <Link
+            href={projectHref}
             onMouseEnter={onActivate}
             onFocus={onActivate}
-            className={`w-full text-left text-sm transition-colors lg:text-base ${colorClass} ${
-              isActive ? 'grid grid-cols-4 gap-4' : 'block'
+            className={`block w-full py-1 text-left text-xs transition-colors lg:text-sm ${colorClass} ${
+              isActive ? 'grid grid-cols-4 gap-x-8 gap-y-1' : 'block'
             }`}
           >
             <span className={isActive ? 'font-medium' : undefined}>{title}</span>
@@ -47,7 +55,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
                 <span>{project.year}</span>
               </>
             ) : null}
-          </button>
+          </Link>
         </li>
       )
     }
@@ -55,15 +63,11 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
     const number = String(index + 1).padStart(3, '0')
 
     return (
-      <li
-        ref={ref}
-        data-project-id={project._id}
-        className="scroll-mt-4 border-b border-black/5 last:border-b-0"
-      >
+      <li ref={ref} data-project-id={project._id} className="scroll-mt-4">
         <button
           type="button"
-          onClick={onActivate}
-          className={`flex w-full items-baseline gap-4 px-5 py-4 text-left text-base transition-colors ${
+          onClick={goToProject}
+          className={`flex w-full items-baseline gap-3 px-5 py-2 text-left text-sm transition-colors ${
             isActive ? 'font-medium text-black' : 'text-neutral-300'
           }`}
         >

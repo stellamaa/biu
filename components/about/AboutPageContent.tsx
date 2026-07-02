@@ -3,7 +3,6 @@
 import {AboutContact} from './AboutContact'
 import {AboutDescription} from './AboutDescription'
 import {AboutImage} from './AboutImage'
-import {AboutSection} from './AboutSection'
 import {AboutSectionHeading} from './AboutSectionHeading'
 import {AboutTopBar} from './AboutTopBar'
 import type {PreparedAboutPage} from '@/lib/i18n/prepareAboutPage'
@@ -33,15 +32,9 @@ export function AboutPageContent({about}: AboutPageContentProps) {
                 </div>
                 <AboutDescription
                   text={about.biuDescriptionDisplay}
-                  size="biu"
                   className="mt-4 lg:mt-4"
                 />
               </div>
-              <AboutSection
-                title={about.aboutBasiTitle}
-                foundedYear={about.basiFoundedYear}
-                description={about.basiDescriptionDisplay}
-              />
             </div>
             <AboutContact
               email={about.email}

@@ -4,7 +4,6 @@ import type {Locale} from './translations'
 
 export type PreparedAboutPage = NonNullable<AboutPageQueryResult> & {
   biuDescriptionDisplay: string
-  basiDescriptionDisplay: string
 }
 
 export async function prepareAboutPage(
@@ -13,14 +12,10 @@ export async function prepareAboutPage(
 ): Promise<PreparedAboutPage | null> {
   if (!about) return null
 
-  const [biuDescriptionDisplay, basiDescriptionDisplay] = await Promise.all([
-    translateText(about.biuDescription, locale),
-    translateText(about.basiDescription, locale),
-  ])
+  const biuDescriptionDisplay = await translateText(about.biuDescription, locale)
 
   return {
     ...about,
     biuDescriptionDisplay,
-    basiDescriptionDisplay,
   }
 }

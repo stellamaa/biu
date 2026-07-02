@@ -10,6 +10,9 @@ type PageTopBarProps = {
   variant: 'desktop' | 'mobile'
   /** On landing desktop, About + toggle sit on the image column instead. */
   showDesktopNav?: boolean
+  logoHref?: string
+  /** Match horizontal padding with main content (px-5 lg:px-6). */
+  alignWithContent?: boolean
 }
 
 /** Matches landing page header layout (landscape label + logo + about/toggle). */
@@ -18,16 +21,28 @@ export function PageTopBar({
   currentPage,
   variant,
   showDesktopNav = true,
+  logoHref,
+  alignWithContent = false,
 }: PageTopBarProps) {
   if (variant === 'mobile') {
-    return <SiteHeader variant="mobile" theme={theme} currentPage={currentPage} />
+    return (
+      <SiteHeader
+        variant="mobile"
+        theme={theme}
+        currentPage={currentPage}
+        logoHref={logoHref}
+      />
+    )
   }
+
+  const paddingClass = alignWithContent ? 'px-5 lg:px-6' : 'px-8'
 
   return (
     <div className="relative shrink-0">
-      <div className="flex items-start justify-between px-8 pt-8">
+      <div className={`flex items-start justify-between pt-8 ${paddingClass}`}>
         <LandscapeArchitectureLabel variant="desktop" theme={theme} />
         <BiuLogo
+          href={logoHref}
           className={theme === 'about' ? 'text-about-accent' : undefined}
         />
       </div>

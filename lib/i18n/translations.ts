@@ -7,6 +7,9 @@ export const translations = {
     about: 'About',
     inProgress: 'In Progress',
     founded: 'Founded',
+    finalizado: 'Finalizado',
+    images: 'images',
+    projectInfo: 'Project info',
   },
   es: {
     landscapeArchitecture: 'Arquitectura del paisaje',
@@ -14,6 +17,9 @@ export const translations = {
     about: 'Acerca',
     inProgress: 'en desarrollo',
     founded: 'Fundada en',
+    finalizado: 'Finalizado',
+    images: 'imágenes',
+    projectInfo: 'Información del proyecto',
   },
 } as const
 

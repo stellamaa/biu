@@ -31,27 +31,6 @@ export const aboutPage = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'aboutBasiTitle',
-      title: 'About Basi title',
-      type: 'string',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'basiFoundedYear',
-      title: 'BASI founded year',
-      type: 'string',
-      description: 'For example: 2019',
-    }),
-    defineField({
-      name: 'basiDescription',
-      title: 'BASI description',
-      type: 'text',
-      rows: 10,
-      description:
-        'Write in Spanish. English is generated automatically on the website.',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
       name: 'email',
       title: 'Email',
       type: 'string',

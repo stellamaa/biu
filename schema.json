@@ -139,27 +139,6 @@
         },
         "optional": true
       },
-      "aboutBasiTitle": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "basiFoundedYear": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "basiDescription": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
       "email": {
         "type": "objectAttribute",
         "value": {

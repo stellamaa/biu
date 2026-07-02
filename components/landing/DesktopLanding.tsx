@@ -32,9 +32,9 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
 
         <ProjectSketch project={activeProject} />
 
-        <div className="mt-auto px-8 pb-8">
+        <div className="mt-auto w-full px-5 pb-8 lg:px-6">
           {projects.length > 0 ? (
-            <ul className="space-y-4">
+            <ul className="w-full space-y-6">
               {projects.map((project, index) => (
                 <ProjectListItem
                   key={project._id}
