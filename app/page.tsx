@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import {LandingPage} from '@/components/landing/LandingPage'
 import {getServerLocale} from '@/lib/i18n/getServerLocale'
 import {sanityClient} from '@/sanity/lib/client'

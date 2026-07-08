@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import {AboutView} from '@/components/about/AboutView'
 import {getServerLocale} from '@/lib/i18n/getServerLocale'
 import {prepareAboutPage} from '@/lib/i18n/prepareAboutPage'

@@ -11,6 +11,11 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
   const {locale, setLocale} = useLanguage()
   const isAbout = theme === 'about'
 
+  const options: {code: Locale; label: string}[] = [
+    {code: 'es', label: 'ES'},
+    {code: 'en', label: 'EN'},
+  ]
+
   return (
     <div
       className={`inline-flex items-center rounded-full border p-0.5 text-xs tracking-wide 3xl:text-base 3xl:p-1 ${
@@ -21,12 +26,12 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
       role="group"
       aria-label="Language"
     >
-      {(['es', 'en'] as const).map((code) => (
+      {options.map(({code, label}) => (
         <button
           key={code}
           type="button"
-          onClick={() => setLocale(code as Locale)}
-          className={`rounded-full px-2.5 py-1 uppercase transition-colors ${
+          onClick={() => setLocale(code)}
+          className={`rounded-full px-2.5 py-1 transition-colors ${
             locale === code
               ? isAbout
                 ? 'bg-about-accent text-about-bg'
@@ -37,7 +42,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
           }`}
           aria-pressed={locale === code}
         >
-          {code}
+          {label}
         </button>
       ))}
     </div>

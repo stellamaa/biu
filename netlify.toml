@@ -1,0 +1,6 @@
+[build]
+  command = "npm run build"
+
+# Required for password gate and locale cookies on Netlify.
+# Set in Site settings → Environment variables:
+#   SITE_PASSWORD=biubiu

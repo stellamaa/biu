@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import {LOCALE_COOKIE} from '@/lib/i18n/constants'
+import {readLocaleCookie, writeLocaleCookie} from '@/lib/i18n/localeCookie'
 import {
   translations,
   type Locale,
@@ -38,13 +38,16 @@ export function LanguageProvider({
   const [locale, setLocaleState] = useState<Locale>(initialLocale)
 
   useEffect(() => {
-    setLocaleState(initialLocale)
-  }, [initialLocale])
+    const cookieLocale = readLocaleCookie()
+    if (cookieLocale) {
+      setLocaleState(cookieLocale)
+    }
+  }, [])
 
   const setLocale = useCallback(
     (next: Locale) => {
       setLocaleState(next)
-      document.cookie = `${LOCALE_COOKIE}=${next};path=/;max-age=${60 * 60 * 24 * 365};SameSite=Lax`
+      writeLocaleCookie(next)
       router.refresh()
     },
     [router],
