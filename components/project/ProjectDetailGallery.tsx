@@ -91,8 +91,8 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
         })}
       </div>
 
-      <div className="flex shrink-0 items-center justify-end bg-white px-6 pb-2 pt-3">
-        <p className="text-xs text-neutral-400 lg:text-sm">
+      <div className="flex shrink-0 items-center justify-end bg-white px-6 pb-2 pt-3 3xl:px-8 3xl:pb-4 3xl:pt-4">
+        <p className="text-xs text-neutral-400 lg:text-sm 3xl:text-base">
           {activeIndex + 1}/{images.length} {t('images')}
         </p>
       </div>

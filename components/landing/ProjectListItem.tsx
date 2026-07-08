@@ -43,7 +43,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
             href={projectHref}
             onMouseEnter={onActivate}
             onFocus={onActivate}
-            className={`block w-full py-1 text-left text-xs transition-colors lg:text-sm ${colorClass} ${
+            className={`block w-full py-0.5 text-left text-xs transition-colors lg:text-sm 3xl:text-lg ${colorClass} ${
               isActive ? 'grid grid-cols-4 gap-x-8 gap-y-1' : 'block'
             }`}
           >

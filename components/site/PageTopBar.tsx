@@ -35,11 +35,13 @@ export function PageTopBar({
     )
   }
 
-  const paddingClass = alignWithContent ? 'px-5 lg:px-6' : 'px-8'
+  const paddingClass = alignWithContent
+    ? 'px-5 lg:px-6 3xl:px-8'
+    : 'px-8 3xl:px-10'
 
   return (
     <div className="relative shrink-0">
-      <div className={`flex items-start justify-between pt-8 ${paddingClass}`}>
+      <div className={`flex items-start justify-between pt-8 3xl:pt-10 ${paddingClass}`}>
         <LandscapeArchitectureLabel variant="desktop" theme={theme} />
         <BiuLogo
           href={logoHref}

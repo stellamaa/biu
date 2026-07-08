@@ -7,7 +7,7 @@ export const translations = {
     about: 'About',
     inProgress: 'In Progress',
     founded: 'Founded',
-    finalizado: 'Finalizado',
+    finalizado: 'Finished',
     images: 'images',
     projectInfo: 'Project info',
   },

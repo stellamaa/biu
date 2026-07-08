@@ -20,14 +20,14 @@ export function ProjectDetailMeta({
   const isFinished = finalizado === true
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs lg:text-sm">
+    <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs lg:text-sm 3xl:gap-x-6 3xl:text-lg">
       <Link href="/" className="text-neutral-300 hover:text-neutral-500">
         {t('projects')}
       </Link>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 3xl:gap-2.5">
         <span
-          className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${
+          className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full 3xl:h-3 3xl:w-3 ${
             isFinished ? 'bg-black' : 'border border-black bg-transparent'
           }`}
           aria-hidden
@@ -39,9 +39,9 @@ export function ProjectDetailMeta({
 
       <span className="text-black">{location}</span>
 
-      <div className="flex items-center gap-1.5 text-black">
+      <div className="flex items-center gap-1.5 text-black 3xl:gap-2">
         <span
-          className="inline-block h-2 w-2 shrink-0 border border-black"
+          className="inline-block h-2 w-2 shrink-0 border border-black 3xl:h-2.5 3xl:w-2.5"
           aria-hidden
         />
         <span>{size}</span>

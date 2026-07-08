@@ -29,13 +29,13 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
             logoHref="/"
             alignWithContent
           />
-          <div className="flex min-h-0 flex-1 flex-col px-5 pb-10 pt-0 lg:px-6 lg:pb-12 lg:pt-2">
-            <h1 className="mt-10 text-base font-medium text-black">
+          <div className="flex min-h-0 flex-1 flex-col px-5 pb-10 pt-0 lg:px-6 lg:pb-12 lg:pt-2 3xl:px-8 3xl:pb-16 3xl:pt-4">
+            <h1 className="mt-10 text-base font-medium text-black 3xl:mt-12 3xl:text-xl">
               {project.title}
             </h1>
 
             {project.descriptionDisplay ? (
-              <p className="mt-3 max-w-[85%] whitespace-pre-line text-base leading-snug text-black">
+              <p className="mt-3 max-w-[85%] whitespace-pre-line text-base leading-snug text-black 3xl:mt-4 3xl:text-xl">
                 {project.descriptionDisplay}
               </p>
             ) : null}

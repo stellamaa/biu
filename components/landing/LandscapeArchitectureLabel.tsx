@@ -19,7 +19,7 @@ export function LandscapeArchitectureLabel({
 
   if (variant === 'desktop') {
     return (
-      <p className={`text-xs tracking-wide lg:text-sm ${colorClass}`}>
+      <p className={`text-xs tracking-wide lg:text-sm 3xl:text-base ${colorClass}`}>
         {t('landscapeArchitecture')}
       </p>
     )

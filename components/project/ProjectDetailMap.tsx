@@ -15,8 +15,8 @@ export function ProjectDetailMap({
   variant = 'default',
   matchHeight,
 }: ProjectDetailMapProps) {
-  const mapSrc = getSanityImageUrl(project.mapImage, {width: 600})
-  const sketchSrc = getSanityImageUrl(project.sketchImage, {width: 600})
+  const mapSrc = getSanityImageUrl(project.mapImage, {width: 1200})
+  const sketchSrc = getSanityImageUrl(project.sketchImage, {width: 1200})
   const src = mapSrc ?? (variant === 'compact' ? sketchSrc : null)
   const alt =
     project.mapImage?.alt ??
@@ -56,13 +56,13 @@ export function ProjectDetailMap({
   }
 
   return (
-    <div className="relative mt-8 aspect-[16/10] w-full max-w-md">
+    <div className="relative mt-8 aspect-[16/10] w-full max-w-md 3xl:mt-12 3xl:max-w-2xl">
       <Image
         src={src}
         alt={project.mapImage?.alt ?? `${project.title ?? 'Project'} map`}
         fill
         className="object-contain object-left"
-        sizes="(min-width: 1024px) 40vw, 80vw"
+        sizes="(min-width: 2000px) 672px, (min-width: 1024px) 40vw, 80vw"
       />
     </div>
   )

@@ -32,9 +32,9 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
 
         <ProjectSketch project={activeProject} />
 
-        <div className="mt-auto w-full px-5 pb-8 lg:px-6">
+        <div className="mt-auto w-full px-5 pb-8 lg:px-6 3xl:px-8 3xl:pb-10">
           {projects.length > 0 ? (
-            <ul className="w-full space-y-6">
+            <ul className="w-full space-y-2">
               {projects.map((project, index) => (
                 <ProjectListItem
                   key={project._id}
@@ -47,7 +47,7 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-neutral-300">No projects published yet.</p>
+            <p className="text-sm text-neutral-300 3xl:text-lg">No projects published yet.</p>
           )}
         </div>
       </section>

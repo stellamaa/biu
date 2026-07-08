@@ -8,7 +8,7 @@ type BiuLogoProps = {
 export function BiuLogo({className = '', href}: BiuLogoProps) {
   const logo = (
     <span
-      className={`text-2xl font-normal tracking-tight lg:text-2xl ${className}`}
+      className={`text-2xl font-normal tracking-tight lg:text-2xl 3xl:text-4xl ${className}`}
     >
       BI&Uacute;
     </span>

@@ -35,7 +35,7 @@ export function SiteHeader({
   if (variant === 'desktop') {
     return (
       <div
-        className={`absolute right-6 top-6 z-20 flex items-center gap-6 text-sm ${textClass}`}
+        className={`absolute right-6 top-6 z-20 flex items-center gap-6 text-sm 3xl:text-lg 3xl:right-8 3xl:top-8 3xl:gap-8 ${textClass}`}
       >
         {aboutLabel}
         <LanguageToggle theme={theme} />
