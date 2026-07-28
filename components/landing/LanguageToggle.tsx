@@ -7,18 +7,24 @@ type LanguageToggleProps = {
   theme?: 'light' | 'about'
 }
 
+const LOCALE_LABELS: Record<Locale, string> = {
+  es: 'ES',
+  en: 'EN',
+}
+
+const labelStyle = {
+  fontFamily:
+    'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  letterSpacing: '0.04em',
+} as const
+
 export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
   const {locale, setLocale} = useLanguage()
   const isAbout = theme === 'about'
 
-  const options: {code: Locale; label: string}[] = [
-    {code: 'es', label: 'ES'},
-    {code: 'en', label: 'EN'},
-  ]
-
   return (
     <div
-      className={`inline-flex items-center rounded-full border p-0.5 font-[Helvetica,Arial,sans-serif] text-xs tracking-wide 3xl:text-base 3xl:p-1 ${
+      className={`isolate inline-flex items-center rounded-full border p-0.5 text-xs 3xl:p-1 3xl:text-base ${
         isAbout
           ? 'border-about-accent/40 bg-about-bg'
           : 'border-black/10 bg-white'
@@ -26,11 +32,12 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
       role="group"
       aria-label="Language"
     >
-      {options.map(({code, label}) => (
+      {(['es', 'en'] as const).map((code) => (
         <button
           key={code}
           type="button"
           onClick={() => setLocale(code)}
+          style={labelStyle}
           className={`rounded-full px-2.5 py-1 transition-colors ${
             locale === code
               ? isAbout
@@ -42,7 +49,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
           }`}
           aria-pressed={locale === code}
         >
-          {label}
+          {LOCALE_LABELS[code]}
         </button>
       ))}
     </div>

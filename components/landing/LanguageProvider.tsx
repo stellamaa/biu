@@ -1,6 +1,5 @@
 'use client'
 
-import {useRouter} from 'next/navigation'
 import {
   createContext,
   useCallback,
@@ -10,7 +9,6 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import {readLocaleCookie, writeLocaleCookie} from '@/lib/i18n/localeCookie'
 import {
   translations,
   type Locale,
@@ -34,23 +32,32 @@ export function LanguageProvider({
   children,
   initialLocale = 'es',
 }: LanguageProviderProps) {
-  const router = useRouter()
   const [locale, setLocaleState] = useState<Locale>(initialLocale)
 
   useEffect(() => {
-    const cookieLocale = readLocaleCookie()
-    if (cookieLocale) {
-      setLocaleState(cookieLocale)
-    }
-  }, [])
+    setLocaleState(initialLocale)
+  }, [initialLocale])
 
   const setLocale = useCallback(
     (next: Locale) => {
+      if (next === locale) return
+
       setLocaleState(next)
-      writeLocaleCookie(next)
-      router.refresh()
+
+      void (async () => {
+        const response = await fetch('/api/locale', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({locale: next}),
+          credentials: 'same-origin',
+        })
+
+        if (!response.ok) return
+
+        window.location.reload()
+      })()
     },
-    [router],
+    [locale],
   )
 
   const t = useCallback(
