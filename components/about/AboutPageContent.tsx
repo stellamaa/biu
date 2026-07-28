@@ -13,48 +13,58 @@ type AboutPageContentProps = {
 
 export function AboutPageContent({about}: AboutPageContentProps) {
   return (
-    <div className="flex min-h-dvh flex-col bg-about-bg text-about-accent">
+    <div className="flex min-h-dvh flex-col bg-about-bg text-about-accent lg:h-dvh lg:overflow-hidden">
       <AboutTopBar />
       {about ? (
-        <div className="flex min-h-0 flex-1 flex-col gap-8 px-4 pb-10 pt-2 lg:grid lg:grid-cols-2 lg:gap-12 lg:pb-16 lg:pl-5 lg:pr-10 lg:pt-4 3xl:gap-16 3xl:pb-20 3xl:pl-8 3xl:pr-12 3xl:pt-6">
-          <div className="flex min-h-0 w-full min-w-0 flex-col gap-8 lg:h-full lg:gap-0 lg:pr-6">
-            <div className="space-y-10 lg:space-y-12">
-              <div className="space-y-2">
-                <AboutSectionHeading
-                  title={about.aboutBiuTitle}
-                  foundedYear={about.biuFoundedYear}
-                />
-                <div className="pt-0 lg:hidden">
-                  <AboutImage
-                    image={about.aboutImage}
-                    className="mx-auto max-w-lg"
-                  />
-                </div>
-                <AboutDescription
-                  text={about.biuDescriptionDisplay}
-                  className="mt-4 lg:mt-4"
-                />
-              </div>
+        <>
+          <div className="flex flex-1 flex-col px-4 pb-10 pt-2 lg:hidden">
+            <div className="space-y-4">
+              <AboutSectionHeading
+                title={about.aboutBiuTitle}
+                foundedYear={about.biuFoundedYear}
+              />
+              <AboutImage image={about.aboutImage} className="mx-auto max-w-lg" />
+              <AboutDescription text={about.biuDescriptionDisplay} />
             </div>
-            <div className="hidden min-h-40 flex-1 lg:block" aria-hidden />
             <AboutContact
               email={about.email}
               telephone1={about.telephone1}
               telephone2={about.telephone2}
+              className="mt-8"
             />
           </div>
-          <div className="hidden lg:flex lg:items-end lg:justify-end lg:pb-16 lg:pr-6 lg:pt-3 3xl:pb-20 3xl:pr-8 3xl:pt-4">
-            <AboutImage
-              image={about.aboutImage}
-              className="max-w-[min(46vw,540px)] 3xl:max-w-[min(46vw,680px)]"
-            />
+
+          <div className="hidden min-h-0 flex-1 overflow-hidden lg:flex lg:flex-col lg:px-6 lg:pb-8 lg:pt-18 3xl:px-10 3xl:pb-10 3xl:pt-24 4xl:px-14 4xl:pb-12 4xl:pt-28">
+            <div className="grid min-h-0 flex-1 grid-cols-[1.15fr_0.85fr] gap-x-12 overflow-hidden 3xl:gap-x-16 4xl:gap-x-20">
+              <div className="flex min-h-0 flex-col pr-20 3xl:pr-28 4xl:pr-36">
+                <div className="flex min-h-0 flex-1 flex-col space-y-5 overflow-hidden 3xl:space-y-7 4xl:space-y-9">
+                  <AboutSectionHeading
+                    title={about.aboutBiuTitle}
+                    foundedYear={about.biuFoundedYear}
+                  />
+                  <AboutDescription
+                    text={about.biuDescriptionDisplay}
+                    className="min-h-0 flex-1 overflow-hidden"
+                  />
+                </div>
+                <AboutContact
+                  email={about.email}
+                  telephone1={about.telephone1}
+                  telephone2={about.telephone2}
+                  className="shrink-0 pt-6 3xl:pt-8 4xl:pt-10"
+                />
+              </div>
+              <div className="flex min-h-0 justify-end pl-4 lg:pr-12 3xl:pl-6 3xl:pr-20 4xl:pl-8 4xl:pr-24">
+                <AboutImage
+                  image={about.aboutImage}
+                  fitHeight
+                  className="ml-auto max-w-[min(100%,580px)] 2xl:max-h-75%] 2xl:max-w-[min(100%,640px)] 2xl:self-start 3xl:max-h-full 3xl:max-w-[min(100%,1000px)] 4xl:max-w-[min(100%,1320px)]"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      ) : (
-        <p className="px-6 py-16 text-sm text-about-accent/60 lg:pl-5 lg:pr-10">
-          Add content in Sanity Studio → About page.
-        </p>
-      )}
+        </>
+      ) : null}
     </div>
   )
 }

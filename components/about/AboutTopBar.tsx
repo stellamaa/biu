@@ -27,14 +27,14 @@ export function AboutTopBar() {
       </header>
 
       <header className="relative hidden shrink-0 lg:grid lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="flex items-start justify-between px-6 pt-8 3xl:px-8 3xl:pt-10">
+        <div className="flex items-start justify-between px-6 pt-8 3xl:px-10 3xl:pt-12 4xl:px-14 4xl:pt-16">
           <LandscapeArchitectureLabel variant="desktop" theme="about" />
           <Link href="/" className="hover:opacity-80">
-            <BiuLogo className="text-about-accent" />
+            <BiuLogo className="text-about-accent 3xl:text-4xl 4xl:text-5xl" />
           </Link>
         </div>
         <div className="relative">
-          <div className="absolute right-6 top-6 z-20 flex items-center gap-6 text-sm text-about-accent 3xl:right-8 3xl:top-8 3xl:gap-8 3xl:text-lg">
+          <div className="absolute right-6 top-6 z-20 flex items-center gap-6 text-sm text-about-accent 2xl:text-sm 3xl:text-xl 4xl:text-3xl 3xl:right-10 3xl:top-10 3xl:gap-8 4xl:right-14 4xl:top-14 4xl:gap-10">
             <span>{t('about')}</span>
             <LanguageToggle theme="about" />
           </div>

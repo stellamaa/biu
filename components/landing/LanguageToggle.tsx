@@ -24,7 +24,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
 
   return (
     <div
-      className={`isolate inline-flex items-center rounded-full border p-0.5 text-xs 3xl:p-1 3xl:text-base ${
+      className={`isolate inline-flex items-center rounded-full border p-0.5 text-xs 3xl:p-1.5 3xl:text-lg 4xl:p-2 4xl:text-2xl ${
         isAbout
           ? 'border-about-accent/40 bg-about-bg'
           : 'border-black/10 bg-white'
@@ -38,7 +38,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
           type="button"
           onClick={() => setLocale(code)}
           style={labelStyle}
-          className={`rounded-full px-2.5 py-1 transition-colors ${
+          className={`rounded-full px-2.5 py-1 transition-colors 3xl:px-3.5 3xl:py-1.5 4xl:px-5 4xl:py-2 ${
             locale === code
               ? isAbout
                 ? 'bg-about-accent text-about-bg'

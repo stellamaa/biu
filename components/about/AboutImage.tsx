@@ -9,23 +9,29 @@ type AboutPageData = NonNullable<AboutPageQueryResult>
 type AboutImageProps = {
   image: AboutPageData['aboutImage']
   className?: string
+  /** Size from available height (desktop viewport layout). */
+  fitHeight?: boolean
 }
 
-export function AboutImage({image, className = ''}: AboutImageProps) {
+export function AboutImage({
+  image,
+  className = '',
+  fitHeight = false,
+}: AboutImageProps) {
   const src = getSanityImageUrl(image, {width: 900})
+
+  const frameClass = fitHeight
+    ? 'relative h-full max-h-full w-auto aspect-[4/5]'
+    : 'relative aspect-[3/4] w-full lg:aspect-[4/5]'
 
   if (!src) {
     return (
-      <div
-        className={`aspect-[3/4] w-full bg-about-accent/10 lg:aspect-[4/5] ${className}`}
-      />
+      <div className={`bg-about-accent/10 ${frameClass} ${className}`} />
     )
   }
 
   return (
-    <div
-      className={`relative aspect-[3/4] w-full lg:aspect-[4/5] ${className}`}
-    >
+    <div className={`${frameClass} ${className}`}>
       <Image
         src={src}
         alt={image?.alt ?? 'About'}

@@ -43,17 +43,41 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
 
   useEffect(() => {
     const container = scrollRef.current
-    if (!container) return
+    if (!container || images.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+        const top = visible[0]
+        if (!top) return
+
+        const index = Number((top.target as HTMLElement).dataset.index)
+        if (!Number.isNaN(index)) setActiveIndex(index)
+      },
+      {
+        root: container,
+        threshold: [0.35, 0.5, 0.65],
+      },
+    )
+
+    images.forEach((_, index) => {
+      const element = itemRefs.current.get(index)
+      if (element) observer.observe(element)
+    })
 
     updateActiveIndex()
     container.addEventListener('scroll', updateActiveIndex, {passive: true})
     window.addEventListener('resize', updateActiveIndex)
 
     return () => {
+      observer.disconnect()
       container.removeEventListener('scroll', updateActiveIndex)
       window.removeEventListener('resize', updateActiveIndex)
     }
-  }, [updateActiveIndex])
+  }, [images, updateActiveIndex])
 
   if (images.length === 0) {
     return <div className="h-full w-full bg-neutral-100" />
@@ -72,6 +96,7 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
           return (
             <div
               key={image._key ?? index}
+              data-index={index}
               ref={(node) => {
                 if (node) itemRefs.current.set(index, node)
                 else itemRefs.current.delete(index)

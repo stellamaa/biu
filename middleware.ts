@@ -14,7 +14,9 @@ export async function middleware(request: NextRequest) {
 
   const {pathname} = request.nextUrl
   const isPublicPath =
-    pathname === '/coming-soon' || pathname.startsWith('/api/site-unlock')
+    pathname === '/coming-soon' ||
+    pathname.startsWith('/api/site-unlock') ||
+    pathname === '/api/locale'
 
   const token = request.cookies.get(SITE_UNLOCK_COOKIE)?.value
   const isUnlocked = await verifyUnlockPassword(token, sitePassword)

@@ -14,6 +14,7 @@
   --color-about-accent: var(--about-accent);
   --font-sans: var(--font-abc-favorit), Arial, Helvetica, sans-serif;
   --breakpoint-3xl: 125rem;
+  --breakpoint-4xl: 240rem;
 }
 
 body {
