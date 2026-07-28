@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import {forwardRef} from 'react'
 import {useRouter} from 'next/navigation'
+import {getProjectPath} from '@/lib/project/url'
 import {useLanguage} from './LanguageProvider'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type ProjectListItemProps = {
-  project: Project
+  project: LandingProject
   index: number
   isActive: boolean
   variant: 'desktop' | 'mobile'
@@ -26,7 +27,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
       project.finalizado === false
         ? ` (${t('inProgress')})`
         : ''
-    const projectHref = `/projects/${encodeURIComponent(project._id)}`
+    const projectHref = getProjectPath(project)
 
     const goToProject = () => {
       router.push(projectHref)

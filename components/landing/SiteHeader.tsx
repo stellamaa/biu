@@ -27,7 +27,10 @@ export function SiteHeader({
     currentPage === 'about' ? (
       <span className={textClass}>{t('about')}</span>
     ) : (
-      <Link href="/about" className={`${textClass} ${hoverClass}`}>
+      <Link
+        href="/about"
+        className={`text-white mix-blend-difference ${hoverClass}`}
+      >
         {t('about')}
       </Link>
     )

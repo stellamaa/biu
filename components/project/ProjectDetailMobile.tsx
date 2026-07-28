@@ -156,7 +156,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           <div className="h-full w-full bg-neutral-100" />
         ) : (
           images.map((image, index) => {
-            const src = getSanityImageUrl(image, {width: 1200})
+            const src = getSanityImageUrl(image, {width: 900})
             if (!src) return null
 
             const showInfoOverlay = index === 0 && infoOpen

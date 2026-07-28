@@ -15,8 +15,8 @@ export function ProjectDetailMap({
   variant = 'default',
   matchHeight,
 }: ProjectDetailMapProps) {
-  const mapSrc = getSanityImageUrl(project.mapImage, {width: 1200})
-  const sketchSrc = getSanityImageUrl(project.sketchImage, {width: 1200})
+  const mapSrc = getSanityImageUrl(project.mapImage, {width: 800})
+  const sketchSrc = getSanityImageUrl(project.sketchImage, {width: 800})
   const src = mapSrc ?? (variant === 'compact' ? sketchSrc : null)
   const alt =
     project.mapImage?.alt ??

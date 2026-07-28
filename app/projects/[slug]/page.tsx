@@ -5,16 +5,16 @@ import {ProjectDetailView} from '@/components/project/ProjectDetailView'
 import {getServerLocale} from '@/lib/i18n/getServerLocale'
 import {prepareProject} from '@/lib/i18n/prepareProject'
 import {sanityClient} from '@/sanity/lib/client'
-import {projectByIdQuery} from '@/sanity/lib/queries'
+import {projectBySlugQuery} from '@/sanity/lib/queries'
 
 type ProjectPageProps = {
-  params: Promise<{id: string}>
+  params: Promise<{slug: string}>
 }
 
 export default async function ProjectPage({params}: ProjectPageProps) {
-  const {id} = await params
+  const {slug} = await params
   const locale = await getServerLocale()
-  const project = await sanityClient.fetch(projectByIdQuery, {id})
+  const project = await sanityClient.fetch(projectBySlugQuery, {slug})
   const prepared = await prepareProject(project, locale)
 
   if (!prepared) notFound()

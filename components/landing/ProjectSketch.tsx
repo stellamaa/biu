@@ -2,14 +2,14 @@
 
 import Image from 'next/image'
 import {getSanityImageUrl} from '@/sanity/lib/image'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type ProjectSketchProps = {
-  project: Project | null
+  project: LandingProject | null
 }
 
 export function ProjectSketch({project}: ProjectSketchProps) {
-  const src = getSanityImageUrl(project?.sketchImage, {width: 1400})
+  const src = getSanityImageUrl(project?.sketchImage, {width: 900})
 
   if (!src) {
     return <div className="flex flex-1 items-center justify-center" />

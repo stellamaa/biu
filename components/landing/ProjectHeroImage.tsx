@@ -2,10 +2,10 @@
 
 import Image from 'next/image'
 import {getSanityImageUrl} from '@/sanity/lib/image'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type ProjectHeroImageProps = {
-  project: Project | null
+  project: LandingProject | null
   variant: 'desktop' | 'mobile'
   priority?: boolean
 }
@@ -16,7 +16,7 @@ export function ProjectHeroImage({
   priority = false,
 }: ProjectHeroImageProps) {
   const src = getSanityImageUrl(project?.mainImage, {
-    width: variant === 'desktop' ? 2000 : 1200,
+    width: variant === 'desktop' ? 1200 : 800,
   })
 
   if (!src) {

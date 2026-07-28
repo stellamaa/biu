@@ -5,10 +5,10 @@ import {LandscapeArchitectureLabel} from './LandscapeArchitectureLabel'
 import {ProjectHeroImage} from './ProjectHeroImage'
 import {ProjectListItem} from './ProjectListItem'
 import {SiteHeader} from './SiteHeader'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type MobileLandingProps = {
-  projects: Project[]
+  projects: LandingProject[]
 }
 
 export function MobileLanding({projects}: MobileLandingProps) {

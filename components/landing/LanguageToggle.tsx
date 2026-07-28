@@ -18,7 +18,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
 
   return (
     <div
-      className={`inline-flex items-center rounded-full border p-0.5 text-xs tracking-wide 3xl:text-base 3xl:p-1 ${
+      className={`inline-flex items-center rounded-full border p-0.5 font-[Helvetica,Arial,sans-serif] text-xs tracking-wide 3xl:text-base 3xl:p-1 ${
         isAbout
           ? 'border-about-accent/40 bg-about-bg'
           : 'border-black/10 bg-white'

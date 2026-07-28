@@ -4,10 +4,10 @@ import type {Locale} from '@/lib/i18n/translations'
 import {LanguageProvider} from './LanguageProvider'
 import {DesktopLanding} from './DesktopLanding'
 import {MobileLanding} from './MobileLanding'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type LandingPageProps = {
-  projects: Project[]
+  projects: LandingProject[]
   initialLocale: Locale
 }
 

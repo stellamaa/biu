@@ -1,13 +1,13 @@
-import type {ProjectByIdQueryResult} from '@/sanity.types'
+import type {ProjectBySlugQueryResult} from '@/sanity.types'
 import {translateText} from './translateContent'
 import type {Locale} from './translations'
 
-export type PreparedProject = NonNullable<ProjectByIdQueryResult> & {
+export type PreparedProject = NonNullable<ProjectBySlugQueryResult> & {
   descriptionDisplay: string
 }
 
 export async function prepareProject(
-  project: ProjectByIdQueryResult,
+  project: ProjectBySlugQueryResult,
   locale: Locale,
 ): Promise<PreparedProject | null> {
   if (!project) return null

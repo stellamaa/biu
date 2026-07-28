@@ -6,10 +6,10 @@ import {ProjectHeroImage} from './ProjectHeroImage'
 import {ProjectListItem} from './ProjectListItem'
 import {ProjectSketch} from './ProjectSketch'
 import {SiteHeader} from './SiteHeader'
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type DesktopLandingProps = {
-  projects: Project[]
+  projects: LandingProject[]
 }
 
 export function DesktopLanding({projects}: DesktopLandingProps) {
@@ -21,13 +21,15 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
   )
 
   return (
-    <div className="hidden h-dvh lg:grid lg:grid-cols-2">
+    <div className="hidden h-dvh lg:grid lg:grid-cols-[1.15fr_0.85fr]">
       <section className="relative flex min-h-0 flex-col bg-white">
         <PageTopBar
           theme="light"
           currentPage="home"
           variant="desktop"
           showDesktopNav={false}
+          logoHref="/"
+          alignWithContent
         />
 
         <ProjectSketch project={activeProject} />

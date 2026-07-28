@@ -13,6 +13,7 @@ export function getSanityImageUrl(
 
   const url = new URL(baseUrl)
   url.searchParams.set('auto', 'format')
+  url.searchParams.set('q', '80')
   if (options?.width) url.searchParams.set('w', String(options.width))
   if (options?.height) url.searchParams.set('h', String(options.height))
   return url.toString()

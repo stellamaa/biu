@@ -1,9 +1,9 @@
 'use client'
 
-import type {Project} from '@/types/schema'
+import type {LandingProject} from '@/types/schema'
 
 type ProjectMetadataProps = {
-  project: Project | null
+  project: LandingProject | null
   variant?: 'desktop' | 'mobile'
 }
 

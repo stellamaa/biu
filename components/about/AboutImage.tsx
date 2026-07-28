@@ -12,7 +12,7 @@ type AboutImageProps = {
 }
 
 export function AboutImage({image, className = ''}: AboutImageProps) {
-  const src = getSanityImageUrl(image, {width: 1200})
+  const src = getSanityImageUrl(image, {width: 900})
 
   if (!src) {
     return (

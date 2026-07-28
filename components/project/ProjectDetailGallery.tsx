@@ -66,7 +66,7 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
         className="min-h-0 flex-1 snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth"
       >
         {images.map((image, index) => {
-          const src = getSanityImageUrl(image, {width: 1600})
+          const src = getSanityImageUrl(image, {width: 1200})
           if (!src) return null
 
           return (

@@ -5,8 +5,9 @@
 import type {
   AboutPage as AboutPageDocument,
   AboutPageQueryResult,
+  LandingProjectsQueryResult,
   Project as ProjectDocument,
-  ProjectByIdQueryResult,
+  ProjectBySlugQueryResult,
   ProjectsQueryResult,
 } from '../sanity.types'
 
@@ -16,10 +17,14 @@ export type ProjectFinalizado = boolean
 export type {
   AboutPageDocument,
   AboutPageQueryResult,
+  LandingProjectsQueryResult,
   ProjectDocument,
-  ProjectByIdQueryResult,
+  ProjectBySlugQueryResult,
   ProjectsQueryResult,
 }
+
+/** Single project returned by `landingProjectsQuery` */
+export type LandingProject = NonNullable<LandingProjectsQueryResult>[number]
 
 /** Single project returned by `projectsQuery` */
 export type Project = NonNullable<ProjectsQueryResult>[number]
