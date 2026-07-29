@@ -92,11 +92,11 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
         <div className="px-5 pt-1">
           <div className="flex items-start gap-4">
             <div ref={metaRef} className="min-w-0 flex-1 text-sm">
-              <h1 className="text-base font-medium leading-snug text-black">
+              <h1 className="text-xs font-medium leading-snug text-black">
                 {project.title}
               </h1>
 
-              <div className="mt-2 flex items-center gap-2">
+              <div className="mt-1 flex items-center gap-2">
                 <span
                   className={`inline-block h-2 w-2 shrink-0 rounded-full ${
                     isFinished ? 'bg-black' : 'border border-black bg-transparent'
@@ -109,13 +109,13 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
               </div>
 
               {(project.location || project.size) && (
-                <div className="mt-5 space-y-2">
+                <div className="mt-6 space-y-1">
                   {project.location ? (
                     <p className="leading-snug text-black">{project.location}</p>
                   ) : null}
 
                   {project.size ? (
-                    <div className="flex items-center gap-1.5 text-black">
+                    <div className="flex items-center gap-1 text-black">
                       <span
                         className="inline-block h-2 w-2 shrink-0 border border-black"
                         aria-hidden

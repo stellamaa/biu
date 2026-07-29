@@ -11,7 +11,7 @@ export function AboutTopBar() {
 
   return (
     <>
-      <header className="grid shrink-0 grid-cols-3 items-center px-4 py-7 lg:hidden">
+      <header className="grid shrink-0 grid-cols-3 items-center px-5 py-8 lg:hidden">
         <Link href="/" className="text-sm text-about-accent hover:opacity-70">
           {t('projects')}
         </Link>
