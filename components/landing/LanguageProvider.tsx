@@ -36,6 +36,7 @@ export function LanguageProvider({
 
   useEffect(() => {
     setLocaleState(initialLocale)
+    document.documentElement.lang = initialLocale
   }, [initialLocale])
 
   const setLocale = useCallback(
