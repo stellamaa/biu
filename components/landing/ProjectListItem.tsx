@@ -1,9 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import {forwardRef} from 'react'
+import {forwardRef, type CSSProperties} from 'react'
 import {useRouter} from 'next/navigation'
 import {getProjectPath} from '@/lib/project/url'
+import {navigateWithTransition} from '@/lib/navigation/pageTransition'
 import {useLanguage} from './LanguageProvider'
 import type {LandingProject} from '@/types/schema'
 
@@ -13,11 +14,12 @@ type ProjectListItemProps = {
   isActive: boolean
   variant: 'desktop' | 'mobile'
   onActivate: () => void
+  style?: CSSProperties
 }
 
 export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
   function ProjectListItem(
-    {project, index, isActive, variant, onActivate},
+    {project, index, isActive, variant, onActivate, style},
     ref,
   ) {
     const router = useRouter()
@@ -30,7 +32,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
     const projectHref = getProjectPath(project)
 
     const goToProject = () => {
-      router.push(projectHref)
+      navigateWithTransition(router, projectHref)
     }
 
     if (variant === 'desktop') {
@@ -64,12 +66,17 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
     const number = String(index + 1).padStart(3, '0')
 
     return (
-      <li ref={ref} data-project-id={project._id} className="scroll-mt-4">
+      <li
+        ref={ref}
+        data-project-id={project._id}
+        className="flex items-center"
+        style={style}
+      >
         <button
           type="button"
           onClick={goToProject}
-          className={`flex w-full items-baseline gap-3 px-5 py-2 text-left text-sm transition-colors ${
-            isActive ? 'font-medium text-black' : 'text-neutral-300'
+          className={`flex w-full items-baseline gap-2 px-5 py-1 text-left text-sm transition-colors duration-200 ${
+            isActive ? 'font-medium text-black' : 'text-neutral-400'
           }`}
         >
           <span className="tabular-nums">{number}</span>

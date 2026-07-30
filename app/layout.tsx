@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import localFont from 'next/font/local'
 import {cookies} from 'next/headers'
+import {PageTransition} from '@/components/PageTransition'
 import {LOCALE_COOKIE} from '@/lib/i18n/constants'
 import './globals.css'
 
@@ -34,7 +35,7 @@ export default async function RootLayout({
       className={`${abcFavorit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-white font-sans text-black">
-        {children}
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   )
