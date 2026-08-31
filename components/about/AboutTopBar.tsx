@@ -11,27 +11,30 @@ export function AboutTopBar() {
 
   return (
     <>
-      <header className="grid shrink-0 grid-cols-3 items-center px-5 py-8 lg:hidden">
-        <Link href="/" className="text-sm text-about-accent hover:opacity-70">
+      <header className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-5 py-8 lg:hidden">
+        <Link
+          href="/"
+          className="justify-self-start text-sm text-about-accent hover:opacity-70"
+        >
           {t('projects')}
         </Link>
-        <div className="flex justify-center">
-          <Link href="/" className="hover:opacity-80">
-            <BiuLogo className="text-[1.6rem] text-about-accent" />
-          </Link>
-        </div>
-        <div className="flex items-center justify-end gap-3 text-sm text-about-accent">
+        <Link href="/" className="justify-self-center hover:opacity-80">
+          <BiuLogo className="text-[1.6rem] text-about-accent" />
+        </Link>
+        <div className="flex shrink-0 items-center justify-self-end gap-2 text-[12px] font-light leading-none text-about-accent">
           <span>{t('about')}</span>
           <LanguageToggle theme="about" />
         </div>
       </header>
 
       <header className="relative hidden shrink-0 lg:grid lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="flex items-start justify-between px-6 pt-8 3xl:px-10 3xl:pt-12 4xl:px-14 4xl:pt-16">
+        <div className="relative px-6 pt-8 3xl:px-10 3xl:pt-12 4xl:px-14 4xl:pt-16">
           <LandscapeArchitectureLabel variant="desktop" theme="about" />
-          <Link href="/" className="hover:opacity-80">
-            <BiuLogo className="text-about-accent 3xl:text-4xl 4xl:text-5xl" />
-          </Link>
+          <div className="fixed left-1/2 top-8 z-30 hidden -translate-x-1/2 lg:block 3xl:top-12 4xl:top-16">
+            <Link href="/" className="hover:opacity-80">
+              <BiuLogo className="text-about-accent 3xl:text-4xl 4xl:text-5xl" />
+            </Link>
+          </div>
         </div>
         <div className="relative">
           <div className="absolute right-6 top-6 z-20 flex items-center gap-6 text-sm text-about-accent 2xl:text-sm 3xl:text-xl 4xl:text-3xl 3xl:right-10 3xl:top-10 3xl:gap-8 4xl:right-14 4xl:top-14 4xl:gap-10">

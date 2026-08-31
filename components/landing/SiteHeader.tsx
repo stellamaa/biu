@@ -23,43 +23,61 @@ export function SiteHeader({
   const textClass = isAboutTheme ? 'text-about-accent' : 'text-black'
   const hoverClass = isAboutTheme ? 'hover:opacity-70' : 'hover:opacity-60'
 
-  const aboutLabel =
-    currentPage === 'about' ? (
-      <span className={textClass}>{t('about')}</span>
-    ) : (
+  const renderAboutLabel = () => {
+    if (currentPage === 'about') {
+      return <span className={textClass}>{t('about')}</span>
+    }
+
+    if (variant === 'desktop') {
+      return (
+        <Link
+          href="/about"
+          className={`text-white mix-blend-difference ${hoverClass}`}
+        >
+          {t('about')}
+        </Link>
+      )
+    }
+
+    return (
       <Link
         href="/about"
-        className={`text-white mix-blend-difference ${hoverClass}`}
+        className={`text-[#707070] ${hoverClass}`}
       >
         {t('about')}
       </Link>
     )
+  }
 
   if (variant === 'desktop') {
     return (
       <div
-        className={`absolute right-6 top-6 z-20 flex items-center gap-6 text-sm 3xl:text-lg 3xl:right-8 3xl:top-8 3xl:gap-8 ${textClass}`}
+        className={`absolute right-6 top-8 z-20 flex items-center gap-6 text-[12px] font-light leading-none 3xl:text-lg 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${textClass}`}
       >
-        {aboutLabel}
+        {renderAboutLabel()}
         <LanguageToggle theme={theme} />
       </div>
     )
   }
- 
- 
+
   return (
-    <header className="grid shrink-0 grid-cols-3 items-center px-6 py-4">
-      <Link href="/" className={`text-sm ${textClass} ${hoverClass}`}>
+    <header className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-6 pt-6 pb-4">
+      <Link
+        href="/"
+        className={`justify-self-start text-xs md:text-sm ${textClass} ${hoverClass}`}
+      >
         {t('projects')}
       </Link>
-      <div className="flex justify-center">
+
+      <div className="justify-self-center">
         <BiuLogo
           href={logoHref}
           className={`text-2xl ${isAboutTheme ? 'text-about-accent' : ''}`}
         />
       </div>
-      <div className={`flex items-center justify-end gap-3 text-sm ${textClass}`}>
-        {aboutLabel}
+
+      <div className="flex shrink-0 items-center justify-self-end gap-2 text-[12px] font-light leading-none">
+        {renderAboutLabel()}
         <LanguageToggle theme={theme} />
       </div>
     </header>

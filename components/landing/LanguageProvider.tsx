@@ -14,6 +14,7 @@ import {
   type Locale,
   type TranslationKey,
 } from '@/lib/i18n/translations'
+import {DEFAULT_LOCALE} from '@/lib/i18n/constants'
 
 type LanguageContextValue = {
   locale: Locale
@@ -30,7 +31,7 @@ type LanguageProviderProps = {
 
 export function LanguageProvider({
   children,
-  initialLocale = 'es',
+  initialLocale = DEFAULT_LOCALE,
 }: LanguageProviderProps) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale)
 
@@ -44,19 +45,14 @@ export function LanguageProvider({
       if (next === locale) return
 
       setLocaleState(next)
+      document.documentElement.lang = next
 
-      void (async () => {
-        const response = await fetch('/api/locale', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({locale: next}),
-          credentials: 'same-origin',
-        })
-
-        if (!response.ok) return
-
-        window.location.reload()
-      })()
+      void fetch('/api/locale', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({locale: next}),
+        credentials: 'same-origin',
+      })
     },
     [locale],
   )

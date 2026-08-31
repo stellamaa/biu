@@ -13,7 +13,8 @@ type MobileLandingProps = {
 
 const HOLD_MS = 3000
 const PAUSE_AFTER_INTERACTION_MS = 5000
-const HERO_FADE_MS = 350
+const HERO_MIN_OPACITY = 0.85
+const HERO_CROSSFADE_MS = 700
 const DEFAULT_ITEM_HEIGHT = 28
 const SCROLL_END_DEBOUNCE_MS = 120
 
@@ -30,8 +31,11 @@ export function MobileLanding({projects}: MobileLandingProps) {
 
   const [trackIndex, setTrackIndex] = useState(0)
   const [itemHeight, setItemHeight] = useState(DEFAULT_ITEM_HEIGHT)
-  const [heroProject, setHeroProject] = useState(projects[0] ?? null)
-  const [heroVisible, setHeroVisible] = useState(true)
+  const [baseHeroProject, setBaseHeroProject] = useState(projects[0] ?? null)
+  const [overlayHeroProject, setOverlayHeroProject] =
+    useState<LandingProject | null>(null)
+  const [baseDimmed, setBaseDimmed] = useState(false)
+  const [overlayVisible, setOverlayVisible] = useState(false)
 
   trackIndexRef.current = trackIndex
 
@@ -65,14 +69,28 @@ export function MobileLanding({projects}: MobileLandingProps) {
     if (activeProject._id === activeProjectIdRef.current) return
 
     activeProjectIdRef.current = activeProject._id
-    setHeroVisible(false)
+    setOverlayHeroProject(activeProject)
+    setBaseDimmed(false)
+    setOverlayVisible(false)
+
+    const frame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setBaseDimmed(true)
+        setOverlayVisible(true)
+      })
+    })
 
     const timeout = window.setTimeout(() => {
-      setHeroProject(activeProject)
-      setHeroVisible(true)
-    }, HERO_FADE_MS)
+      setBaseHeroProject(activeProject)
+      setOverlayHeroProject(null)
+      setBaseDimmed(false)
+      setOverlayVisible(false)
+    }, HERO_CROSSFADE_MS)
 
-    return () => window.clearTimeout(timeout)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.clearTimeout(timeout)
+    }
   }, [activeProject])
 
   const clearHold = useCallback(() => {
@@ -209,6 +227,25 @@ export function MobileLanding({projects}: MobileLandingProps) {
   }, [scheduleHold, clearHold, projects.length])
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        clearHold()
+        clearScrollEndTimeout()
+        return
+      }
+
+      pauseUntilRef.current = Date.now() + PAUSE_AFTER_INTERACTION_MS
+      if (projects.length > 1) {
+        scheduleHold()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [clearHold, clearScrollEndTimeout, projects.length, scheduleHold])
+
+  useEffect(() => {
     return () => clearScrollEndTimeout()
   }, [clearScrollEndTimeout])
 
@@ -220,11 +257,30 @@ export function MobileLanding({projects}: MobileLandingProps) {
     <div className="flex h-dvh flex-col lg:hidden">
       <SiteHeader variant="mobile" theme="light" currentPage="home" />
       <div className="shrink-0 px-5 pt-1">
-        <div
-          className="transition-opacity duration-500 ease-in-out"
-          style={{opacity: heroVisible ? 1 : 0}}
-        >
-          <ProjectHeroImage project={heroProject} variant="mobile" priority />
+        <div className="relative aspect-[4/5] w-full">
+          <div
+            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{opacity: baseDimmed ? HERO_MIN_OPACITY : 1}}
+          >
+            <ProjectHeroImage
+              project={baseHeroProject}
+              variant="mobile"
+              priority
+              fillParent
+            />
+          </div>
+          {overlayHeroProject ? (
+            <div
+              className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+              style={{opacity: overlayVisible ? 1 : HERO_MIN_OPACITY}}
+            >
+              <ProjectHeroImage
+                project={overlayHeroProject}
+                variant="mobile"
+                fillParent
+              />
+            </div>
+          ) : null}
         </div>
       </div>
 

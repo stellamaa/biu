@@ -1,9 +1,9 @@
 'use client'
 
 import {useCallback, useEffect, useRef, useState} from 'react'
-import Image from 'next/image'
+import {SanityImage} from '@/components/SanityImage'
 import {useLanguage} from '@/components/landing/LanguageProvider'
-import {getSanityImageUrl} from '@/sanity/lib/image'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import {getProjectGalleryImages} from '@/lib/project/gallery'
 import type {PreparedProject} from '@/lib/i18n/prepareProject'
 
@@ -90,7 +90,9 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
         className="min-h-0 flex-1 snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth"
       >
         {images.map((image, index) => {
-          const src = getSanityImageUrl(image, {width: 1200})
+          const src = getSanityImageUrl(image, {
+            width: sanityImageWidths.desktopGallery,
+          })
           if (!src) return null
 
           return (
@@ -103,7 +105,7 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
               }}
               className="relative min-h-full shrink-0 snap-start lg:h-[80vh] lg:min-h-[80vh]"
             >
-              <Image
+              <SanityImage
                 src={src}
                 alt={image.alt ?? `${project.title ?? 'Project'} image ${index + 1}`}
                 fill

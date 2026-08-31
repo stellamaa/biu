@@ -24,7 +24,10 @@ export function AboutPageContent({about}: AboutPageContentProps) {
                 foundedYear={about.biuFoundedYear}
               />
               <AboutImage image={about.aboutImage} className="mx-auto max-w-lg" />
-              <AboutDescription text={about.biuDescriptionDisplay} />
+              <AboutDescription
+                sourceText={about.biuDescription}
+                initialDisplay={about.biuDescriptionDisplay}
+              />
             </div>
             <AboutContact
               email={about.email}
@@ -43,7 +46,8 @@ export function AboutPageContent({about}: AboutPageContentProps) {
                     foundedYear={about.biuFoundedYear}
                   />
                   <AboutDescription
-                    text={about.biuDescriptionDisplay}
+                    sourceText={about.biuDescription}
+                    initialDisplay={about.biuDescriptionDisplay}
                     className="min-h-0 flex-1 overflow-hidden"
                   />
                 </div>

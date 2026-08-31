@@ -21,7 +21,7 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
   )
 
   return (
-    <div className="hidden h-dvh lg:grid lg:grid-cols-[1.15fr_0.85fr]">
+    <div className="hidden h-dvh lg:grid lg:grid-cols-[1.08fr_0.92fr]">
       <section className="relative flex min-h-0 flex-col bg-white">
         <PageTopBar
           theme="light"
@@ -32,25 +32,29 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
           alignWithContent
         />
 
-        <ProjectSketch project={activeProject} />
+        <div className="flex min-h-0 flex-1 flex-col">
+          <ProjectSketch project={activeProject} />
 
-        <div className="mt-auto w-full px-5 pb-8 lg:px-6 3xl:px-8 3xl:pb-10">
-          {projects.length > 0 ? (
-            <ul className="w-full space-y-2">
-              {projects.map((project, index) => (
-                <ProjectListItem
-                  key={project._id}
-                  project={project}
-                  index={index}
-                  isActive={project._id === activeId}
-                  variant="desktop"
-                  onActivate={() => setActiveId(project._id)}
-                />
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-neutral-300 3xl:text-lg">No projects published yet.</p>
-          )}
+          <div className="flex min-h-0 flex-1 flex-col justify-end px-5 pb-[14vh] lg:px-6 3xl:px-8 3xl:pb-[16vh]">
+            {projects.length > 0 ? (
+              <ul className="w-full space-y-0">
+                {projects.map((project, index) => (
+                  <ProjectListItem
+                    key={project._id}
+                    project={project}
+                    index={index}
+                    isActive={project._id === activeId}
+                    variant="desktop"
+                    onActivate={() => setActiveId(project._id)}
+                  />
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[12px] text-neutral-300 3xl:text-lg">
+                No projects published yet.
+              </p>
+            )}
+          </div>
         </div>
       </section>
 

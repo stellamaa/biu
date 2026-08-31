@@ -1,10 +1,11 @@
 'use client'
 
 import {useLayoutEffect, useRef, useState} from 'react'
-import Image from 'next/image'
+import {SanityImage} from '@/components/SanityImage'
 import {SiteHeader} from '@/components/landing/SiteHeader'
 import {useLanguage} from '@/components/landing/LanguageProvider'
-import {getSanityImageUrl} from '@/sanity/lib/image'
+import {useCmsText} from '@/lib/i18n/useCmsText'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import {getProjectGalleryImages} from '@/lib/project/gallery'
 import {ProjectDetailMap} from './ProjectDetailMap'
 import type {PreparedProject} from '@/lib/i18n/prepareProject'
@@ -37,6 +38,10 @@ function InfoCloseIcon() {
 
 export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   const {t} = useLanguage()
+  const description = useCmsText(
+    project.description,
+    project.descriptionDisplay,
+  )
   const [infoOpen, setInfoOpen] = useState(false)
   const metaRef = useRef<HTMLDivElement>(null)
   const galleryRef = useRef<HTMLDivElement>(null)
@@ -44,6 +49,8 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   const [galleryHeight, setGalleryHeight] = useState(0)
   const images = getProjectGalleryImages(project)
   const isFinished = project.finalizado === true
+  const firstImageHeight =
+    galleryHeight > 0 ? Math.round(galleryHeight * 0.88) : undefined
 
   useLayoutEffect(() => {
     const node = metaRef.current
@@ -103,21 +110,21 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                   }`}
                   aria-hidden
                 />
-                <span className="text-black">
+                <span className="text-xs text-black">
                   {isFinished ? t('finalizado') : t('inProgress')}
                 </span>
               </div>
 
               {(project.location || project.size) && (
-                <div className="mt-6 space-y-1">
+                <div className="mt-6 space-y-1 text-xs">
                   {project.location ? (
                     <p className="leading-snug text-black">{project.location}</p>
                   ) : null}
 
                   {project.size ? (
-                    <div className="flex items-center gap-1 text-black">
+                    <div className="flex items-center gap-1 text-xs text-black">
                       <span
-                        className="inline-block h-2 w-2 shrink-0 border border-black"
+                        className="inline-block h-2 w-2 shrink-0 border border-black text-xs"
                         aria-hidden
                       />
                       <span>{project.size}</span>
@@ -134,11 +141,11 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
             />
           </div>
 
-          {project.descriptionDisplay ? (
+          {description ? (
             <button
               type="button"
               onClick={() => setInfoOpen((open) => !open)}
-              className="mt-6 mb-4 text-sm text-black"
+              className="mt-6 mb-4 text-xs text-black"
             >
               {t('projectInfo')} {infoOpen ? '−' : '+'}
             </button>
@@ -150,69 +157,72 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
 
       <div
         ref={galleryRef}
-        className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+        className={`relative min-h-0 flex-1 overscroll-contain ${
+          infoOpen ? 'overflow-hidden' : 'overflow-y-auto'
+        }`}
       >
         {images.length === 0 ? (
           <div className="h-full w-full bg-neutral-100" />
         ) : (
-          images.map((image, index) => {
-            const src = getSanityImageUrl(image, {width: 900})
-            if (!src) return null
+          <>
+            <div className="flex flex-col gap-1">
+              {images.map((image, index) => {
+                const src = getSanityImageUrl(image, {
+                  width: sanityImageWidths.mobileGallery,
+                })
+                if (!src) return null
 
-            const showInfoOverlay = index === 0 && infoOpen
-            const isFirst = index === 0
+                const isFirst = index === 0
 
-            const firstImageHeight =
-              galleryHeight > 0 ? Math.round(galleryHeight * 0.88) : undefined
+                return (
+                  <div key={image._key ?? index} className="relative w-full">
+                    <div
+                      className={`relative w-full ${
+                        isFirst ? '' : 'aspect-[2/3]'
+                      }`}
+                      style={
+                        isFirst && firstImageHeight
+                          ? {height: firstImageHeight}
+                          : undefined
+                      }
+                    >
+                      <SanityImage
+                        src={src}
+                        alt={
+                          image.alt ??
+                          `${project.title ?? 'Project'} image ${index + 1}`
+                        }
+                        fill
+                        className={`object-cover transition-opacity ${
+                          infoOpen ? 'opacity-50' : 'opacity-100'
+                        }`}
+                        sizes="100vw"
+                        priority={index === 0}
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
 
-            return (
-              <div key={image._key ?? index} className="relative w-full">
-                <div
-                  className={`relative w-full ${
-                    isFirst ? '' : 'aspect-[2/3]'
-                  }`}
-                  style={
-                    isFirst && firstImageHeight
-                      ? {height: firstImageHeight}
-                      : undefined
-                  }
+            {infoOpen ? (
+              <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
+                <button
+                  type="button"
+                  onClick={() => setInfoOpen(false)}
+                  className="absolute right-4 top-4 z-10 p-1"
+                  aria-label="Close project info"
                 >
-                  <Image
-                    src={src}
-                    alt={
-                      image.alt ??
-                      `${project.title ?? 'Project'} image ${index + 1}`
-                    }
-                    fill
-                    className={`object-cover transition-opacity ${
-                      showInfoOverlay ? 'opacity-50' : 'opacity-100'
-                    }`}
-                    sizes="100vw"
-                    priority={index === 0}
-                  />
-
-                  {showInfoOverlay ? (
-                    <>
-                      <div className="absolute inset-0 bg-white/40" />
-                      <button
-                        type="button"
-                        onClick={() => setInfoOpen(false)}
-                        className="absolute right-4 top-4 z-10 p-1"
-                        aria-label="Close project info"
-                      >
-                        <InfoCloseIcon />
-                      </button>
-                      <div className="absolute inset-0 z-[1] overflow-y-auto p-5 pt-12">
-                        <p className="whitespace-pre-line text-sm leading-snug text-black">
-                          {project.descriptionDisplay}
-                        </p>
-                      </div>
-                    </>
-                  ) : null}
+                  <InfoCloseIcon />
+                </button>
+                <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-12">
+                  <p className="whitespace-pre-line text-sm leading-snug text-black">
+                    {description}
+                  </p>
                 </div>
               </div>
-            )
-          })
+            ) : null}
+          </>
         )}
       </div>
     </div>

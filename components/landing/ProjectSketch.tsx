@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
-import {getSanityImageUrl} from '@/sanity/lib/image'
+import {SanityImage} from '@/components/SanityImage'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import type {LandingProject} from '@/types/schema'
 
 type ProjectSketchProps = {
@@ -9,16 +9,18 @@ type ProjectSketchProps = {
 }
 
 export function ProjectSketch({project}: ProjectSketchProps) {
-  const src = getSanityImageUrl(project?.sketchImage, {width: 900})
+  const src = getSanityImageUrl(project?.sketchImage, {
+    width: sanityImageWidths.sketch,
+  })
 
   if (!src) {
-    return <div className="flex flex-1 items-center justify-center" />
+    return <div className="shrink-0" aria-hidden />
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-8 py-4 3xl:px-12 3xl:py-6">
-      <div className="relative aspect-[4/3] w-full max-w-md 3xl:max-w-2xl">
-        <Image
+    <div className="flex shrink-0 justify-center px-5 pt-6 lg:px-6 lg:pt-10 3xl:px-8 3xl:pt-12">
+      <div className="relative aspect-[4/3] w-full max-w-[min(100%,360px)] 3xl:max-w-2xl">
+        <SanityImage
           key={project?._id ?? 'empty'}
           src={src}
           alt={project?.sketchImage?.alt ?? `${project?.title ?? 'Project'} sketch`}

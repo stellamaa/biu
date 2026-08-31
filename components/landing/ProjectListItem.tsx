@@ -46,8 +46,8 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
             href={projectHref}
             onMouseEnter={onActivate}
             onFocus={onActivate}
-            className={`block w-full py-0.5 text-left text-xs transition-colors lg:text-sm 3xl:text-lg ${colorClass} ${
-              isActive ? 'grid grid-cols-4 gap-x-8 gap-y-1' : 'block'
+            className={`block w-full py-0 text-left text-[12px] leading-tight transition-colors 3xl:text-lg ${colorClass} ${
+              isActive ? 'grid grid-cols-4 gap-x-6 gap-y-0' : 'block'
             }`}
           >
             <span className={isActive ? 'font-medium' : undefined}>{title}</span>

@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
-import {getSanityImageUrl} from '@/sanity/lib/image'
+import {SanityImage} from '@/components/SanityImage'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import type {AboutPageQueryResult} from '@/sanity.types'
 
 type AboutPageData = NonNullable<AboutPageQueryResult>
@@ -18,7 +18,7 @@ export function AboutImage({
   className = '',
   fitHeight = false,
 }: AboutImageProps) {
-  const src = getSanityImageUrl(image, {width: 900})
+  const src = getSanityImageUrl(image, {width: sanityImageWidths.about})
 
   const frameClass = fitHeight
     ? 'relative h-full max-h-full w-auto aspect-[4/5]'
@@ -32,7 +32,7 @@ export function AboutImage({
 
   return (
     <div className={`${frameClass} ${className}`}>
-      <Image
+      <SanityImage
         src={src}
         alt={image?.alt ?? 'About'}
         fill

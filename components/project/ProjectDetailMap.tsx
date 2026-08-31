@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
-import {getSanityImageUrl} from '@/sanity/lib/image'
+import {SanityImage} from '@/components/SanityImage'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import type {PreparedProject} from '@/lib/i18n/prepareProject'
 
 type ProjectDetailMapProps = {
@@ -15,8 +15,12 @@ export function ProjectDetailMap({
   variant = 'default',
   matchHeight,
 }: ProjectDetailMapProps) {
-  const mapSrc = getSanityImageUrl(project.mapImage, {width: 800})
-  const sketchSrc = getSanityImageUrl(project.sketchImage, {width: 800})
+  const mapSrc = getSanityImageUrl(project.mapImage, {
+    width: sanityImageWidths.map,
+  })
+  const sketchSrc = getSanityImageUrl(project.sketchImage, {
+    width: sanityImageWidths.map,
+  })
   const src = mapSrc ?? (variant === 'compact' ? sketchSrc : null)
   const alt =
     project.mapImage?.alt ??
@@ -29,7 +33,7 @@ export function ProjectDetailMap({
     if (!matchHeight) {
       return (
         <div className="relative aspect-[3/4] w-[42%] max-w-[160px] shrink-0">
-          <Image
+          <SanityImage
             src={src}
             alt={alt}
             fill
@@ -42,11 +46,11 @@ export function ProjectDetailMap({
 
     return (
       <div className="flex w-[42%] max-w-[160px] shrink-0 justify-end">
-        <Image
+        <SanityImage
           src={src}
           alt={alt}
-          width={800}
-          height={800}
+          width={sanityImageWidths.map}
+          height={sanityImageWidths.map}
           className="block w-auto max-w-full object-contain object-top"
           style={{height: matchHeight, width: 'auto'}}
           sizes="42vw"
@@ -57,7 +61,7 @@ export function ProjectDetailMap({
 
   return (
     <div className="relative mt-8 aspect-[16/10] w-full max-w-md 3xl:mt-12 3xl:max-w-2xl">
-      <Image
+      <SanityImage
         src={src}
         alt={project.mapImage?.alt ?? `${project.title ?? 'Project'} map`}
         fill

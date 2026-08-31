@@ -41,12 +41,14 @@ export function PageTopBar({
 
   return (
     <div className="relative shrink-0">
-      <div className={`flex items-start justify-between pt-8 3xl:pt-10 ${paddingClass}`}>
-        <LandscapeArchitectureLabel variant="desktop" theme={theme} />
+      <div className="fixed left-1/2 top-8 z-30 hidden -translate-x-1/2 lg:block 3xl:top-10 4xl:top-14">
         <BiuLogo
           href={logoHref}
           className={theme === 'about' ? 'text-about-accent' : undefined}
         />
+      </div>
+      <div className={`pt-8 3xl:pt-10 ${paddingClass}`}>
+        <LandscapeArchitectureLabel variant="desktop" theme={theme} />
       </div>
       {showDesktopNav ? (
         <SiteHeader variant="desktop" theme={theme} currentPage={currentPage} />

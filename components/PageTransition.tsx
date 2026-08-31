@@ -13,12 +13,14 @@ export function PageTransition({children}: PageTransitionProps) {
   const router = useRouter()
   const [isFadingOut, setIsFadingOut] = useState(false)
   const [isReady, setIsReady] = useState(false)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
   const prevPathnameRef = useRef(pathname)
   const skipTransition = pathname.startsWith('/admin')
 
   useEffect(() => {
     if (pathname !== prevPathnameRef.current) {
       prevPathnameRef.current = pathname
+      setIsInitialLoad(false)
       setIsFadingOut(false)
       setIsReady(false)
       const frame = requestAnimationFrame(() => {
@@ -27,15 +29,17 @@ export function PageTransition({children}: PageTransitionProps) {
       return () => cancelAnimationFrame(frame)
     }
 
-    const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(() => setIsReady(true))
-    })
-    return () => cancelAnimationFrame(frame)
+    // First paint: show content immediately so LCP isn't delayed by fade-in.
+    setIsReady(true)
   }, [pathname])
 
   useEffect(() => {
-    const handleTransitionNavigate = () => setIsFadingOut(true)
+    const handleTransitionNavigate = () => {
+      setIsInitialLoad(false)
+      setIsFadingOut(true)
+    }
     const handleFadeIn = () => {
+      setIsInitialLoad(false)
       setIsFadingOut(false)
       setIsReady(false)
       requestAnimationFrame(() => {
@@ -72,6 +76,7 @@ export function PageTransition({children}: PageTransitionProps) {
         if (url.pathname === pathname) return
 
         event.preventDefault()
+        setIsInitialLoad(false)
         setIsFadingOut(true)
         window.setTimeout(() => {
           router.push(url.pathname + url.search)
@@ -90,7 +95,12 @@ export function PageTransition({children}: PageTransitionProps) {
   }
 
   const fadeOut = isFadingOut ? 'animate-page-fade-out' : ''
-  const fadeIn = isReady && !isFadingOut ? 'animate-page-fade-in' : 'opacity-0'
+  const fadeIn =
+    isInitialLoad
+      ? ''
+      : isReady && !isFadingOut
+        ? 'animate-page-fade-in'
+        : 'opacity-[0.85]'
 
   return (
     <div

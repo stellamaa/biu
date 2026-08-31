@@ -1,5 +1,3 @@
-'use client'
-
 import type {Locale} from '@/lib/i18n/translations'
 import {LanguageProvider} from './LanguageProvider'
 import {DesktopLanding} from './DesktopLanding'

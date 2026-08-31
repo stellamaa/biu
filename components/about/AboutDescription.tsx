@@ -1,9 +1,19 @@
+'use client'
+
+import {useCmsText} from '@/lib/i18n/useCmsText'
+
 type AboutDescriptionProps = {
-  text: string
+  sourceText: string | null | undefined
+  initialDisplay?: string
   className?: string
 }
 
-export function AboutDescription({text, className = ''}: AboutDescriptionProps) {
+export function AboutDescription({
+  sourceText,
+  initialDisplay,
+  className = '',
+}: AboutDescriptionProps) {
+  const text = useCmsText(sourceText, initialDisplay)
   if (!text) return null
 
   return (
