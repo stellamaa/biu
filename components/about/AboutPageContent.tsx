@@ -17,8 +17,8 @@ export function AboutPageContent({about}: AboutPageContentProps) {
       <AboutTopBar />
       {about ? (
         <>
-          <div className="flex flex-1 flex-col px-4 pb-10 pt-2 lg:hidden">
-            <div className="space-y-4">
+          <div className="flex flex-1 flex-col px-4 pb-1 pt-2 lg:hidden">
+            <div className="space-y-0">
               <AboutSectionHeading
                 title={about.aboutBiuTitle}
                 foundedYear={about.biuFoundedYear}

@@ -53,7 +53,7 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
                 year={project.year}
                 finalizado={project.finalizado}
               />
-              <div className="mt-40 opacity-50">
+              <div className="mt-32 opacity-50">
                 <ProjectDetailMap project={project} />
               </div>
             </div>

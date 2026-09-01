@@ -2,9 +2,12 @@ export const dynamic = 'force-dynamic'
 
 import type {Metadata} from 'next'
 import {notFound} from 'next/navigation'
+import {preload} from 'react-dom'
 import {ProjectDetailView} from '@/components/project/ProjectDetailView'
 import {getServerLocale} from '@/lib/i18n/getServerLocale'
 import {prepareProject} from '@/lib/i18n/prepareProject'
+import {getProjectGalleryImages} from '@/lib/project/gallery'
+import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import {sanityClient} from '@/sanity/lib/client'
 import {projectBySlugQuery} from '@/sanity/lib/queries'
 
@@ -41,6 +44,19 @@ export default async function ProjectPage({params}: ProjectPageProps) {
   const prepared = await prepareProject(project, locale)
 
   if (!prepared) notFound()
+
+  const galleryImages = getProjectGalleryImages(prepared)
+  galleryImages.forEach((image, index) => {
+    const url = getSanityImageUrl(image, {
+      width: sanityImageWidths.mobileGallery,
+    })
+    if (!url) return
+
+    preload(url, {
+      as: 'image',
+      fetchPriority: index === 0 ? 'high' : 'auto',
+    })
+  })
 
   return <ProjectDetailView project={prepared} initialLocale={locale} />
 }

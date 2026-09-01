@@ -61,7 +61,7 @@ export function SiteHeader({
   }
 
   return (
-    <header className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-6 pt-6 pb-4">
+    <header className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-5 pt-8 pb-4">
       <Link
         href="/"
         className={`justify-self-start text-xs md:text-sm ${textClass} ${hoverClass}`}

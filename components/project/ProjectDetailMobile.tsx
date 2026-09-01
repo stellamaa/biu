@@ -14,6 +14,8 @@ type ProjectDetailMobileProps = {
   project: PreparedProject
 }
 
+const MOBILE_GALLERY_IMAGE_QUALITY = 92
+
 function InfoCloseIcon() {
   return (
     <svg
@@ -44,13 +46,9 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   )
   const [infoOpen, setInfoOpen] = useState(false)
   const metaRef = useRef<HTMLDivElement>(null)
-  const galleryRef = useRef<HTMLDivElement>(null)
   const [metaHeight, setMetaHeight] = useState(0)
-  const [galleryHeight, setGalleryHeight] = useState(0)
   const images = getProjectGalleryImages(project)
   const isFinished = project.finalizado === true
-  const firstImageHeight =
-    galleryHeight > 0 ? Math.round(galleryHeight * 0.88) : undefined
 
   useLayoutEffect(() => {
     const node = metaRef.current
@@ -72,23 +70,9 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
     t,
   ])
 
-  useLayoutEffect(() => {
-    const node = galleryRef.current
-    if (!node) return
-
-    const update = () => {
-      setGalleryHeight(node.clientHeight)
-    }
-
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <div className="flex h-dvh flex-col overflow-hidden bg-white">
-      <div className="shrink-0 bg-white">
+    <div className="grid h-dvh grid-rows-[3.9fr_6.5fr] overflow-hidden bg-white">
+      <div className="min-h-0 overflow-y-auto bg-white">
         <SiteHeader
           variant="mobile"
           theme="light"
@@ -96,7 +80,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           logoHref="/"
         />
 
-        <div className="px-5 pt-1">
+        <div className="px-5 pt-1 pb-2">
           <div className="flex items-start gap-4">
             <div ref={metaRef} className="min-w-0 flex-1 text-sm">
               <h1 className="text-xs font-medium leading-snug text-black">
@@ -145,19 +129,16 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
             <button
               type="button"
               onClick={() => setInfoOpen((open) => !open)}
-              className="mt-6 mb-4 text-xs text-black"
+              className="mt-11 text-xs text-black"
             >
               {t('projectInfo')} {infoOpen ? '−' : '+'}
             </button>
-          ) : (
-            <div className="mb-4" />
-          )}
+          ) : null}
         </div>
       </div>
 
       <div
-        ref={galleryRef}
-        className={`relative min-h-0 flex-1 overscroll-contain ${
+        className={`relative min-h-0 overscroll-contain ${
           infoOpen ? 'overflow-hidden' : 'overflow-y-auto'
         }`}
       >
@@ -178,13 +159,8 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                   <div key={image._key ?? index} className="relative w-full">
                     <div
                       className={`relative w-full ${
-                        isFirst ? '' : 'aspect-[2/3]'
+                        isFirst ? 'h-[70dvh] shrink-0' : 'aspect-[2/3]'
                       }`}
-                      style={
-                        isFirst && firstImageHeight
-                          ? {height: firstImageHeight}
-                          : undefined
-                      }
                     >
                       <SanityImage
                         src={src}
@@ -197,7 +173,9 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                           infoOpen ? 'opacity-50' : 'opacity-100'
                         }`}
                         sizes="100vw"
-                        priority={index === 0}
+                        quality={MOBILE_GALLERY_IMAGE_QUALITY}
+                        priority={index < 3}
+                        loading="eager"
                       />
                     </div>
                   </div>

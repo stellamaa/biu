@@ -9,7 +9,7 @@ const MAX_IMAGE_WIDTH = 3200
 export const sanityImageWidths = {
   mobileHero: 1200,
   desktopHero: 2400,
-  mobileGallery: 1600,
+  mobileGallery: 2400,
   desktopGallery: 2400,
   sketch: 1000,
   map: 1200,

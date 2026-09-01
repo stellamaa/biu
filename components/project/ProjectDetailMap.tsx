@@ -32,35 +32,35 @@ export function ProjectDetailMap({
   if (variant === 'compact') {
     if (!matchHeight) {
       return (
-        <div className="relative aspect-[3/4] w-[42%] max-w-[160px] shrink-0">
+        <div className="relative mt-8 mr-4 aspect-[3/4] w-[52%] max-w-[200px] shrink-0">
           <SanityImage
             src={src}
             alt={alt}
             fill
             className="object-contain object-top"
-            sizes="42vw"
+            sizes="52vw"
           />
         </div>
       )
     }
 
     return (
-      <div className="flex w-[42%] max-w-[160px] shrink-0 justify-end">
+      <div className="mt-4 mr-4 flex w-[62%] max-w-[250px] shrink-0 justify-end self-start">
         <SanityImage
           src={src}
           alt={alt}
           width={sanityImageWidths.map}
           height={sanityImageWidths.map}
           className="block w-auto max-w-full object-contain object-top"
-          style={{height: matchHeight, width: 'auto'}}
-          sizes="42vw"
+          style={{height: Math.round(matchHeight * 1.4), width: 'auto'}}
+          sizes="62vw"
         />
       </div>
     )
   }
 
   return (
-    <div className="relative mt-8 aspect-[16/10] w-full max-w-md 3xl:mt-12 3xl:max-w-2xl">
+    <div className="relative mt-4 aspect-[16/10] w-full max-w-md 3xl:mt-8 3xl:max-w-2xl">
       <SanityImage
         src={src}
         alt={project.mapImage?.alt ?? `${project.title ?? 'Project'} map`}
