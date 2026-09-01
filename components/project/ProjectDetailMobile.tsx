@@ -1,6 +1,6 @@
 'use client'
 
-import {useLayoutEffect, useRef, useState} from 'react'
+import {useCallback, useLayoutEffect, useRef, useState} from 'react'
 import {SanityImage} from '@/components/SanityImage'
 import {SiteHeader} from '@/components/landing/SiteHeader'
 import {useLanguage} from '@/components/landing/LanguageProvider'
@@ -45,7 +45,10 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
     project.descriptionDisplay,
   )
   const [infoOpen, setInfoOpen] = useState(false)
+  const [activeInfoIndex, setActiveInfoIndex] = useState(0)
   const metaRef = useRef<HTMLDivElement>(null)
+  const galleryRef = useRef<HTMLDivElement>(null)
+  const imageRefs = useRef<Map<number, HTMLDivElement>>(new Map())
   const [metaHeight, setMetaHeight] = useState(0)
   const images = getProjectGalleryImages(project)
   const isFinished = project.finalizado === true
@@ -70,9 +73,58 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
     t,
   ])
 
+  const getActiveImageIndex = useCallback(() => {
+    const gallery = galleryRef.current
+    if (!gallery || images.length === 0) return 0
+
+    const galleryTop = gallery.scrollTop
+    const galleryBottom = galleryTop + gallery.clientHeight
+
+    let activeIndex = 0
+    let maxVisible = 0
+
+    images.forEach((_, index) => {
+      const element = imageRefs.current.get(index)
+      if (!element) return
+
+      const top = element.offsetTop
+      const bottom = top + element.offsetHeight
+      const visibleTop = Math.max(top, galleryTop)
+      const visibleBottom = Math.min(bottom, galleryBottom)
+      const visible = Math.max(0, visibleBottom - visibleTop)
+
+      if (visible > maxVisible) {
+        maxVisible = visible
+        activeIndex = index
+      }
+    })
+
+    return activeIndex
+  }, [images])
+
+  const scrollToImage = useCallback((index: number) => {
+    const gallery = galleryRef.current
+    const element = imageRefs.current.get(index)
+    if (!gallery || !element) return
+
+    gallery.scrollTo({top: element.offsetTop, behavior: 'auto'})
+  }, [])
+
+  const handleToggleInfo = useCallback(() => {
+    if (infoOpen) {
+      setInfoOpen(false)
+      return
+    }
+
+    const index = getActiveImageIndex()
+    setActiveInfoIndex(index)
+    scrollToImage(index)
+    setInfoOpen(true)
+  }, [getActiveImageIndex, infoOpen, scrollToImage])
+
   return (
-    <div className="grid h-dvh grid-rows-[3.9fr_6.5fr] overflow-hidden bg-white">
-      <div className="min-h-0 overflow-y-auto bg-white">
+    <div className="grid h-dvh grid-rows-[auto_minmax(0,1fr)] overflow-hidden bg-white">
+      <div className="bg-white">
         <SiteHeader
           variant="mobile"
           theme="light"
@@ -80,8 +132,8 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           logoHref="/"
         />
 
-        <div className="px-5 pt-1 pb-2">
-          <div className="flex items-start gap-4">
+        <div className="flex min-h-[38dvh] flex-col px-5 pb-3 pt-2">
+          <div className="flex items-start gap-3">
             <div ref={metaRef} className="min-w-0 flex-1 text-sm">
               <h1 className="text-xs font-medium leading-snug text-black">
                 {project.title}
@@ -100,7 +152,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
               </div>
 
               {(project.location || project.size) && (
-                <div className="mt-6 space-y-1 text-xs">
+                <div className="mt-8 space-y-1 text-xs">
                   {project.location ? (
                     <p className="leading-snug text-black">{project.location}</p>
                   ) : null}
@@ -128,17 +180,20 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           {description ? (
             <button
               type="button"
-              onClick={() => setInfoOpen((open) => !open)}
-              className="mt-11 text-xs text-black"
+              onClick={handleToggleInfo}
+              className="mt-auto pt-14 text-left text-xs text-black"
             >
               {t('projectInfo')} {infoOpen ? '−' : '+'}
             </button>
-          ) : null}
+          ) : (
+            <div className="mt-auto" aria-hidden />
+          )}
         </div>
       </div>
 
       <div
-        className={`relative min-h-0 overscroll-contain ${
+        ref={galleryRef}
+        className={`relative h-full min-h-0 overscroll-contain ${
           infoOpen ? 'overflow-hidden' : 'overflow-y-auto'
         }`}
       >
@@ -156,50 +211,55 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                 const isFirst = index === 0
 
                 return (
-                  <div key={image._key ?? index} className="relative w-full">
-                    <div
-                      className={`relative w-full ${
-                        isFirst ? 'h-[70dvh] shrink-0' : 'aspect-[2/3]'
+                  <div
+                    key={image._key ?? index}
+                    ref={(node) => {
+                      if (node) imageRefs.current.set(index, node)
+                      else imageRefs.current.delete(index)
+                    }}
+                    className={`relative w-full ${
+                      isFirst ? 'min-h-full flex-1 shrink-0' : 'aspect-[2/3]'
+                    }`}
+                  >
+                    <SanityImage
+                      src={src}
+                      alt={
+                        image.alt ??
+                        `${project.title ?? 'Project'} image ${index + 1}`
+                      }
+                      fill
+                      className={`object-cover transition-opacity ${
+                        infoOpen && activeInfoIndex === index
+                          ? 'opacity-50'
+                          : 'opacity-100'
                       }`}
-                    >
-                      <SanityImage
-                        src={src}
-                        alt={
-                          image.alt ??
-                          `${project.title ?? 'Project'} image ${index + 1}`
-                        }
-                        fill
-                        className={`object-cover transition-opacity ${
-                          infoOpen ? 'opacity-50' : 'opacity-100'
-                        }`}
-                        sizes="100vw"
-                        quality={MOBILE_GALLERY_IMAGE_QUALITY}
-                        priority={index < 3}
-                        loading="eager"
-                      />
-                    </div>
+                      sizes="100vw"
+                      quality={MOBILE_GALLERY_IMAGE_QUALITY}
+                      priority={index < 3}
+                      loading="eager"
+                    />
+
+                    {infoOpen && activeInfoIndex === index ? (
+                      <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
+                        <button
+                          type="button"
+                          onClick={() => setInfoOpen(false)}
+                          className="absolute right-4 top-4 z-10 p-1"
+                          aria-label="Close project info"
+                        >
+                          <InfoCloseIcon />
+                        </button>
+                        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-12">
+                          <p className="whitespace-pre-line text-sm leading-snug text-black">
+                            {description}
+                          </p>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 )
               })}
             </div>
-
-            {infoOpen ? (
-              <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
-                <button
-                  type="button"
-                  onClick={() => setInfoOpen(false)}
-                  className="absolute right-4 top-4 z-10 p-1"
-                  aria-label="Close project info"
-                >
-                  <InfoCloseIcon />
-                </button>
-                <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-12">
-                  <p className="whitespace-pre-line text-sm leading-snug text-black">
-                    {description}
-                  </p>
-                </div>
-              </div>
-            ) : null}
           </>
         )}
       </div>
