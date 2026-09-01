@@ -32,7 +32,7 @@ export function ProjectDetailMap({
   if (variant === 'compact') {
     if (!matchHeight) {
       return (
-        <div className="relative mt-8 mr-4 aspect-[3/4] w-[46%] max-w-[175px] shrink-0">
+        <div className="relative mr-4 aspect-[3/4] w-[46%] max-w-[175px] shrink-0">
           <SanityImage
             src={src}
             alt={alt}
@@ -45,7 +45,7 @@ export function ProjectDetailMap({
     }
 
     return (
-      <div className="mt-4 mr-4 flex w-[54%] max-w-[210px] shrink-0 justify-end self-start">
+      <div className="mr-4 flex w-[54%] max-w-[210px] shrink-0 justify-end self-start">
         <SanityImage
           src={src}
           alt={alt}

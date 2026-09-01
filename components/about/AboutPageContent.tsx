@@ -17,7 +17,7 @@ export function AboutPageContent({about}: AboutPageContentProps) {
       <AboutTopBar />
       {about ? (
         <>
-          <div className="flex flex-1 flex-col px-4 pb-1 pt-2 lg:hidden">
+          <div className="flex flex-1 flex-col px-4 pb-8 pt-2 lg:hidden">
             <div className="space-y-0">
               <AboutSectionHeading
                 title={about.aboutBiuTitle}
@@ -33,7 +33,7 @@ export function AboutPageContent({about}: AboutPageContentProps) {
               email={about.email}
               telephone1={about.telephone1}
               telephone2={about.telephone2}
-              className="mt-8"
+              className="mt-8 mb-6"
             />
           </div>
 
@@ -55,7 +55,7 @@ export function AboutPageContent({about}: AboutPageContentProps) {
                   email={about.email}
                   telephone1={about.telephone1}
                   telephone2={about.telephone2}
-                  className="shrink-0 pt-6 3xl:pt-8 4xl:pt-10"
+                  className="mb-6 shrink-0 pt-6 3xl:pt-8 4xl:pt-10"
                 />
               </div>
               <div className="flex min-h-0 justify-end pl-4 lg:pr-12 3xl:pl-6 3xl:pr-20 4xl:pl-8 4xl:pr-24">

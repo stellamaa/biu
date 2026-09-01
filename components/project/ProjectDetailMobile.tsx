@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {useCallback, useLayoutEffect, useRef, useState} from 'react'
 import {SanityImage} from '@/components/SanityImage'
 import {SiteHeader} from '@/components/landing/SiteHeader'
@@ -15,28 +16,6 @@ type ProjectDetailMobileProps = {
 }
 
 const MOBILE_GALLERY_IMAGE_QUALITY = 92
-
-function InfoCloseIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      aria-hidden
-      className="text-black"
-    >
-      <line
-        x1="4"
-        y1="16"
-        x2="16"
-        y2="4"
-        stroke="currentColor"
-        strokeWidth="1"
-      />
-    </svg>
-  )
-}
 
 export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   const {t} = useLanguage()
@@ -132,7 +111,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           logoHref="/"
         />
 
-        <div className="flex min-h-[38dvh] flex-col px-5 pb-3 pt-2">
+        <div className="flex min-h-[34dvh] flex-col px-5 pb-3 pt-6">
           <div className="flex items-start gap-3">
             <div ref={metaRef} className="min-w-0 flex-1 text-sm">
               <h1 className="text-xs font-medium leading-snug text-black">
@@ -181,7 +160,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
             <button
               type="button"
               onClick={handleToggleInfo}
-              className="mt-auto pt-14 text-left text-xs text-black"
+              className="mt-auto pt-6 text-left text-xs text-black"
             >
               {t('projectInfo')} {infoOpen ? '−' : '+'}
             </button>
@@ -201,65 +180,72 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           <div className="h-full w-full bg-neutral-100" />
         ) : (
           <>
-            <div className="flex flex-col gap-1">
-              {images.map((image, index) => {
-                const src = getSanityImageUrl(image, {
-                  width: sanityImageWidths.mobileGallery,
-                })
-                if (!src) return null
+            {images.map((image, index) => {
+              const src = getSanityImageUrl(image, {
+                width: sanityImageWidths.mobileGallery,
+              })
+              if (!src) return null
 
-                const isFirst = index === 0
+              const isFirst = index === 0
 
-                return (
-                  <div
-                    key={image._key ?? index}
-                    ref={(node) => {
-                      if (node) imageRefs.current.set(index, node)
-                      else imageRefs.current.delete(index)
-                    }}
-                    className={`relative w-full ${
-                      isFirst ? 'min-h-full flex-1 shrink-0' : 'aspect-[2/3]'
+              return (
+                <div
+                  key={image._key ?? index}
+                  ref={(node) => {
+                    if (node) imageRefs.current.set(index, node)
+                    else imageRefs.current.delete(index)
+                  }}
+                  className={`relative w-full ${
+                    isFirst
+                      ? 'h-full min-h-full shrink-0'
+                      : 'mt-1 aspect-[3/4]'
+                  }`}
+                >
+                  <SanityImage
+                    src={src}
+                    alt={
+                      image.alt ??
+                      `${project.title ?? 'Project'} image ${index + 1}`
+                    }
+                    fill
+                    className={`object-cover transition-opacity ${
+                      infoOpen && activeInfoIndex === index
+                        ? 'opacity-50'
+                        : 'opacity-100'
                     }`}
-                  >
-                    <SanityImage
-                      src={src}
-                      alt={
-                        image.alt ??
-                        `${project.title ?? 'Project'} image ${index + 1}`
-                      }
-                      fill
-                      className={`object-cover transition-opacity ${
-                        infoOpen && activeInfoIndex === index
-                          ? 'opacity-50'
-                          : 'opacity-100'
-                      }`}
-                      sizes="100vw"
-                      quality={MOBILE_GALLERY_IMAGE_QUALITY}
-                      priority={index < 3}
-                      loading="eager"
-                    />
+                    sizes="100vw"
+                    quality={MOBILE_GALLERY_IMAGE_QUALITY}
+                    priority={index < 3}
+                    loading="eager"
+                  />
 
-                    {infoOpen && activeInfoIndex === index ? (
-                      <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
-                        <button
-                          type="button"
-                          onClick={() => setInfoOpen(false)}
-                          className="absolute right-4 top-4 z-10 p-1"
-                          aria-label="Close project info"
-                        >
-                          <InfoCloseIcon />
-                        </button>
-                        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-12">
-                          <p className="whitespace-pre-line text-sm leading-snug text-black">
-                            {description}
-                          </p>
-                        </div>
+                  {infoOpen && activeInfoIndex === index ? (
+                    <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
+                      <button
+                        type="button"
+                        onClick={() => setInfoOpen(false)}
+                        className="absolute right-4 top-4 z-10 p-1"
+                        aria-label="Close project info"
+                      >
+                        <Image
+                          src="/icons/close-thin.svg"
+                          alt=""
+                          width={28}
+                          height={28}
+                          aria-hidden
+                          className="h-7 w-7 object-contain"
+                        />
+                      </button>
+                      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-16">
+                        <p className="whitespace-pre-line text-sm leading-snug tracking-[0.04em] text-black">
+                          {description}
+                        </p>
                       </div>
-                    ) : null}
-                  </div>
-                )
-              })}
-            </div>
+                    </div>
+                  ) : null}
+                </div>
+              )
+            })}
           </>
         )}
       </div>
