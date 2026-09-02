@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: ['next-sanity'],
+  },
   images: {
+    qualities: [75, 82],
     remotePatterns: [
       {
         protocol: 'https',

@@ -1,10 +1,13 @@
 'use client'
 
-import {useLanguage} from './LanguageProvider'
+import {useContext} from 'react'
+import {LanguageContext} from './LanguageProvider'
 import type {Locale} from '@/lib/i18n/translations'
 
 type LanguageToggleProps = {
   theme?: 'light' | 'about'
+  locale?: Locale
+  onLocaleChange?: (locale: Locale) => void
 }
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -20,8 +23,14 @@ const labelStyle = {
 
 const LOCALE_ORDER: Locale[] = ['en', 'es']
 
-export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
-  const {locale, setLocale} = useLanguage()
+export function LanguageToggle({
+  theme = 'light',
+  locale: controlledLocale,
+  onLocaleChange,
+}: LanguageToggleProps) {
+  const context = useContext(LanguageContext)
+  const locale = controlledLocale ?? context?.locale ?? 'en'
+  const setLocale = onLocaleChange ?? context?.setLocale
   const isAbout = theme === 'about'
   const activeIndex = LOCALE_ORDER.indexOf(locale)
 
@@ -44,7 +53,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
           key={code}
           type="button"
           translate="no"
-          onClick={() => setLocale(code)}
+          onClick={() => setLocale?.(code)}
           style={labelStyle}
           className={`notranslate relative z-10 flex items-center justify-center transition-colors ${
             locale === code

@@ -1,19 +1,26 @@
 'use client'
 
-import {useLanguage} from './LanguageProvider'
+import {translations} from '@/lib/i18n/translations'
+import {useOptionalLanguage} from './LanguageProvider'
 
 type LandscapeArchitectureLabelProps = {
   variant: 'desktop' | 'mobile'
   theme?: 'light' | 'about'
   overlay?: boolean
+  text?: string
 }
 
 export function LandscapeArchitectureLabel({
   variant,
   theme = 'light',
   overlay = false,
+  text,
 }: LandscapeArchitectureLabelProps) {
-  const {t} = useLanguage()
+  const language = useOptionalLanguage()
+  const label =
+    text ??
+    language?.t('landscapeArchitecture') ??
+    translations.en.landscapeArchitecture
   const colorClass =
     theme === 'about' ? 'text-about-accent' : 'text-black'
 
@@ -22,7 +29,7 @@ export function LandscapeArchitectureLabel({
       <p
         className={`text-[14px] leading-none tracking-wide 3xl:text-xl 4xl:text-3xl ${colorClass}`}
       >
-        {t('landscapeArchitecture')}
+        {label}
       </p>
     )
   }
@@ -35,9 +42,7 @@ export function LandscapeArchitectureLabel({
           : `shrink-0 py-5 ${theme === 'about' ? '' : 'border-t border-black/5'}`
       }`}
     >
-      <p className={`text-sm tracking-wide ${colorClass}`}>
-        {t('landscapeArchitecture')}
-      </p>
+      <p className={`text-sm tracking-wide ${colorClass}`}>{label}</p>
     </footer>
   )
 }

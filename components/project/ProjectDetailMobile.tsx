@@ -215,8 +215,8 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                     }`}
                     sizes="100vw"
                     quality={MOBILE_GALLERY_IMAGE_QUALITY}
-                    priority={index < 3}
-                    loading="eager"
+                    priority={index === 0}
+                    loading={index === 0 ? 'eager' : 'lazy'}
                   />
 
                   {infoOpen && activeInfoIndex === index ? (

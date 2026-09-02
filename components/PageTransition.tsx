@@ -29,7 +29,6 @@ export function PageTransition({children}: PageTransitionProps) {
       return () => cancelAnimationFrame(frame)
     }
 
-    // First paint: show content immediately so LCP isn't delayed by fade-in.
     setIsReady(true)
   }, [pathname])
 
@@ -86,8 +85,29 @@ export function PageTransition({children}: PageTransitionProps) {
       }
     }
 
-    document.addEventListener('click', handleClick, true)
-    return () => document.removeEventListener('click', handleClick, true)
+    let attached = false
+    const attach = () => {
+      if (attached) return
+      attached = true
+      document.addEventListener('click', handleClick, true)
+    }
+
+    let idleId: number | null = null
+    const delayId = window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = requestIdleCallback(attach, {timeout: 2500})
+      } else {
+        attach()
+      }
+    }, 1000)
+
+    return () => {
+      window.clearTimeout(delayId)
+      if (idleId !== null && 'cancelIdleCallback' in window) {
+        cancelIdleCallback(idleId)
+      }
+      document.removeEventListener('click', handleClick, true)
+    }
   }, [pathname, router])
 
   if (skipTransition) {

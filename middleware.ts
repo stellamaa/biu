@@ -13,11 +13,23 @@ export async function middleware(request: NextRequest) {
   }
 
   const {pathname} = request.nextUrl
+  const isMetadataPath =
+    pathname === '/favicon.ico' ||
+    pathname === '/icon.png' ||
+    pathname === '/apple-icon.png' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/icon' ||
+    pathname.startsWith('/icon?') ||
+    pathname === '/apple-icon' ||
+    pathname.startsWith('/apple-icon?')
+
   const isPublicPath =
     pathname === '/coming-soon' ||
     pathname.startsWith('/api/site-unlock') ||
     pathname === '/api/locale' ||
-    pathname === '/api/translate'
+    pathname === '/api/translate' ||
+    isMetadataPath
 
   const token = request.cookies.get(SITE_UNLOCK_COOKIE)?.value
   const isUnlocked = await verifyUnlockPassword(token, sitePassword)

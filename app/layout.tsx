@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'BIÚ — Landscape Architecture',
   description: 'BIÚ landscape architecture studio',
+  icons: {
+    icon: [
+      {url: '/favicon.ico'},
+      {url: '/icon.png', type: 'image/png', sizes: '512x512'},
+    ],
+    apple: [{url: '/apple-icon.png', type: 'image/png', sizes: '512x512'}],
+    shortcut: '/favicon.ico',
+  },
   other: {
     google: 'notranslate',
   },

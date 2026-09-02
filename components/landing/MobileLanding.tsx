@@ -1,43 +1,56 @@
 'use client'
 
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import type {ReactNode} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {getLabels} from '@/lib/i18n/getLabels'
+import {persistLocale} from '@/lib/i18n/persistLocale'
+import type {Locale} from '@/lib/i18n/translations'
 import {LandscapeArchitectureLabel} from './LandscapeArchitectureLabel'
-import {ProjectHeroImage} from './ProjectHeroImage'
-import {ProjectListItem} from './ProjectListItem'
+import {MobileLandingHeroFrame} from './MobileLandingHeroFrame'
+import {MobileProjectListItem} from './MobileProjectListItem'
 import {SiteHeader} from './SiteHeader'
 import type {LandingProject} from '@/types/schema'
 
+type MobileLandingProject = Pick<
+  LandingProject,
+  '_id' | 'title' | 'slug' | 'finalizado' | 'mainImage'
+>
+
 type MobileLandingProps = {
-  projects: LandingProject[]
+  projects: MobileLandingProject[]
+  initialLocale: Locale
+  heroImages: ReactNode
 }
 
 const HOLD_MS = 3000
 const PAUSE_AFTER_INTERACTION_MS = 5000
-const HERO_MIN_OPACITY = 0.85
-const HERO_CROSSFADE_MS = 700
-const DEFAULT_ITEM_HEIGHT = 28
+const ITEM_HEIGHT = 28
 const SCROLL_END_DEBOUNCE_MS = 120
+const AUTO_SCROLL_START_DELAY_MS = 6000
 
-export function MobileLanding({projects}: MobileLandingProps) {
-  const measureRef = useRef<HTMLDivElement>(null)
+export function MobileLanding({
+  projects,
+  initialLocale,
+  heroImages,
+}: MobileLandingProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const pauseUntilRef = useRef(0)
-  const activeProjectIdRef = useRef(projects[0]?._id ?? '')
   const trackIndexRef = useRef(0)
   const holdTimeoutRef = useRef<number | null>(null)
   const scrollEndTimeoutRef = useRef<number | null>(null)
   const isAutoScrollingRef = useRef(false)
   const userInteractingRef = useRef(false)
 
+  const [locale, setLocaleState] = useState(initialLocale)
   const [trackIndex, setTrackIndex] = useState(0)
-  const [itemHeight, setItemHeight] = useState(DEFAULT_ITEM_HEIGHT)
-  const [baseHeroProject, setBaseHeroProject] = useState(projects[0] ?? null)
-  const [overlayHeroProject, setOverlayHeroProject] =
-    useState<LandingProject | null>(null)
-  const [baseDimmed, setBaseDimmed] = useState(false)
-  const [overlayVisible, setOverlayVisible] = useState(false)
 
+  const labels = getLabels(locale)
   trackIndexRef.current = trackIndex
+
+  const setLocale = useCallback((next: Locale) => {
+    setLocaleState(next)
+    void persistLocale(next)
+  }, [])
 
   const loopProjects = useMemo(() => {
     if (projects.length === 0) return []
@@ -46,52 +59,10 @@ export function MobileLanding({projects}: MobileLandingProps) {
 
   const activeProjectIndex =
     projects.length > 0 ? trackIndex % projects.length : 0
-  const activeProject = projects[activeProjectIndex] ?? null
-  const listViewportHeight = projects.length * itemHeight
-  const cycleHeight = projects.length * itemHeight
-
-  useLayoutEffect(() => {
-    const node = measureRef.current
-    if (!node) return
-
-    const update = () => {
-      setItemHeight(node.offsetHeight || DEFAULT_ITEM_HEIGHT)
-    }
-
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [projects])
-
-  useEffect(() => {
-    if (!activeProject) return
-    if (activeProject._id === activeProjectIdRef.current) return
-
-    activeProjectIdRef.current = activeProject._id
-    setOverlayHeroProject(activeProject)
-    setBaseDimmed(false)
-    setOverlayVisible(false)
-
-    const frame = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setBaseDimmed(true)
-        setOverlayVisible(true)
-      })
-    })
-
-    const timeout = window.setTimeout(() => {
-      setBaseHeroProject(activeProject)
-      setOverlayHeroProject(null)
-      setBaseDimmed(false)
-      setOverlayVisible(false)
-    }, HERO_CROSSFADE_MS)
-
-    return () => {
-      cancelAnimationFrame(frame)
-      window.clearTimeout(timeout)
-    }
-  }, [activeProject])
+  const activeLqip =
+    projects[activeProjectIndex]?.mainImage?.asset?.metadata?.lqip ?? null
+  const listViewportHeight = projects.length * ITEM_HEIGHT
+  const cycleHeight = projects.length * ITEM_HEIGHT
 
   const clearHold = useCallback(() => {
     if (holdTimeoutRef.current !== null) {
@@ -107,31 +78,27 @@ export function MobileLanding({projects}: MobileLandingProps) {
     }
   }, [])
 
-  const scrollToIndex = useCallback(
-    (index: number, smooth: boolean) => {
-      const el = scrollRef.current
-      if (!el || itemHeight <= 0) return
+  const scrollToIndex = useCallback((index: number, smooth: boolean) => {
+    const el = scrollRef.current
+    if (!el) return
 
-      isAutoScrollingRef.current = smooth
-      el.scrollTo({
-        top: index * itemHeight,
-        behavior: smooth ? 'smooth' : 'auto',
-      })
-    },
-    [itemHeight],
-  )
+    isAutoScrollingRef.current = smooth
+    el.scrollTo({
+      top: index * ITEM_HEIGHT,
+      behavior: smooth ? 'smooth' : 'auto',
+    })
+  }, [])
 
   const syncTrackIndexFromScroll = useCallback(() => {
     const el = scrollRef.current
-    if (!el || itemHeight <= 0) return
+    if (!el) return
 
-    const index = Math.round(el.scrollTop / itemHeight)
-    setTrackIndex(index)
-  }, [itemHeight])
+    setTrackIndex(Math.round(el.scrollTop / ITEM_HEIGHT))
+  }, [])
 
   const finishScroll = useCallback(() => {
     const el = scrollRef.current
-    if (!el || itemHeight <= 0) return
+    if (!el) return
 
     if (trackIndexRef.current >= projects.length) {
       el.scrollTop = 0
@@ -141,7 +108,7 @@ export function MobileLanding({projects}: MobileLandingProps) {
     if (isAutoScrollingRef.current) {
       isAutoScrollingRef.current = false
     }
-  }, [itemHeight, projects.length])
+  }, [projects.length])
 
   const scheduleHold = useCallback(() => {
     clearHold()
@@ -165,7 +132,7 @@ export function MobileLanding({projects}: MobileLandingProps) {
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current
-    if (!el || itemHeight <= 0 || projects.length === 0) return
+    if (!el || projects.length === 0) return
 
     if (el.scrollTop >= cycleHeight) {
       el.scrollTop -= cycleHeight
@@ -186,10 +153,10 @@ export function MobileLanding({projects}: MobileLandingProps) {
       if (userInteractingRef.current) {
         userInteractingRef.current = false
 
-        const nearest = Math.round(el.scrollTop / itemHeight)
+        const nearest = Math.round(el.scrollTop / ITEM_HEIGHT)
         const clamped = Math.max(0, Math.min(nearest, projects.length))
 
-        if (Math.abs(el.scrollTop - clamped * itemHeight) > 1) {
+        if (Math.abs(el.scrollTop - clamped * ITEM_HEIGHT) > 1) {
           scrollToIndex(clamped, true)
           return
         }
@@ -201,7 +168,6 @@ export function MobileLanding({projects}: MobileLandingProps) {
     clearScrollEndTimeout,
     cycleHeight,
     finishScroll,
-    itemHeight,
     projects.length,
     scheduleHold,
     scrollToIndex,
@@ -222,8 +188,30 @@ export function MobileLanding({projects}: MobileLandingProps) {
 
   useEffect(() => {
     if (projects.length <= 1) return
-    scheduleHold()
-    return clearHold
+
+    let cancelled = false
+    let idleId: number | null = null
+
+    const startAutoScroll = () => {
+      if (!cancelled) scheduleHold()
+    }
+
+    const delayId = window.setTimeout(() => {
+      if ('requestIdleCallback' in window) {
+        idleId = requestIdleCallback(startAutoScroll, {timeout: 3000})
+      } else {
+        startAutoScroll()
+      }
+    }, AUTO_SCROLL_START_DELAY_MS)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(delayId)
+      if (idleId !== null && 'cancelIdleCallback' in window) {
+        cancelIdleCallback(idleId)
+      }
+      clearHold()
+    }
   }, [scheduleHold, clearHold, projects.length])
 
   useEffect(() => {
@@ -235,9 +223,7 @@ export function MobileLanding({projects}: MobileLandingProps) {
       }
 
       pauseUntilRef.current = Date.now() + PAUSE_AFTER_INTERACTION_MS
-      if (projects.length > 1) {
-        scheduleHold()
-      }
+      if (projects.length > 1) scheduleHold()
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
@@ -245,9 +231,7 @@ export function MobileLanding({projects}: MobileLandingProps) {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [clearHold, clearScrollEndTimeout, projects.length, scheduleHold])
 
-  useEffect(() => {
-    return () => clearScrollEndTimeout()
-  }, [clearScrollEndTimeout])
+  useEffect(() => () => clearScrollEndTimeout(), [clearScrollEndTimeout])
 
   const pauseAutoScroll = useCallback(() => {
     pauseUntilRef.current = Date.now() + PAUSE_AFTER_INTERACTION_MS
@@ -255,85 +239,59 @@ export function MobileLanding({projects}: MobileLandingProps) {
 
   return (
     <div className="flex h-dvh flex-col lg:hidden">
-      <SiteHeader variant="mobile" theme="light" currentPage="home" />
+      <SiteHeader
+        variant="mobile"
+        theme="light"
+        currentPage="home"
+        labels={labels}
+        locale={locale}
+        onLocaleChange={setLocale}
+      />
       <div className="shrink-0 px-5 pt-1">
-        <div className="relative aspect-[4/5] w-full">
-          <div
-            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-            style={{opacity: baseDimmed ? HERO_MIN_OPACITY : 1}}
-          >
-            <ProjectHeroImage
-              project={baseHeroProject}
-              variant="mobile"
-              priority
-              fillParent
-            />
-          </div>
-          {overlayHeroProject ? (
-            <div
-              className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-              style={{opacity: overlayVisible ? 1 : HERO_MIN_OPACITY}}
-            >
-              <ProjectHeroImage
-                project={overlayHeroProject}
-                variant="mobile"
-                fillParent
-              />
-            </div>
-          ) : null}
-        </div>
+        <MobileLandingHeroFrame
+          activeIndex={activeProjectIndex}
+          projectCount={projects.length}
+          lqip={activeLqip}
+        >
+          {heroImages}
+        </MobileLandingHeroFrame>
       </div>
 
       <div className="relative min-h-0 flex-1 overflow-hidden pt-4">
         {projects.length > 0 ? (
-          <>
-            <div
-              ref={measureRef}
-              className="pointer-events-none absolute left-0 top-0 -z-10 opacity-0"
-              aria-hidden
-            >
-              <ProjectListItem
-                project={projects[0]}
-                index={0}
-                isActive={false}
-                variant="mobile"
-                onActivate={() => {}}
-              />
-            </div>
-
-            <div
-              ref={scrollRef}
-              className="mobile-landing-scroll overflow-y-auto overscroll-none"
-              style={{
-                height: listViewportHeight,
-                scrollBehavior: 'auto',
-              }}
-              onScroll={handleScroll}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              <ul>
-                {loopProjects.map((project, index) => (
-                  <ProjectListItem
-                    key={`${project._id}-${index}`}
-                    project={project}
-                    index={index % projects.length}
-                    isActive={index === trackIndex}
-                    variant="mobile"
-                    onActivate={pauseAutoScroll}
-                    style={{height: itemHeight}}
-                  />
-                ))}
-              </ul>
-            </div>
-          </>
+          <div
+            ref={scrollRef}
+            className="mobile-landing-scroll overflow-y-auto overscroll-none"
+            style={{height: listViewportHeight, scrollBehavior: 'auto'}}
+            onScroll={handleScroll}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <ul>
+              {loopProjects.map((project, index) => (
+                <MobileProjectListItem
+                  key={`${project._id}-${index}`}
+                  project={project}
+                  index={index % projects.length}
+                  isActive={index === trackIndex}
+                  inProgressLabel={labels.inProgress}
+                  onActivate={pauseAutoScroll}
+                  style={{height: ITEM_HEIGHT}}
+                />
+              ))}
+            </ul>
+          </div>
         ) : (
           <p className="px-5 py-8 text-sm text-neutral-400">
             No projects published yet.
           </p>
         )}
 
-        <LandscapeArchitectureLabel variant="mobile" overlay />
+        <LandscapeArchitectureLabel
+          variant="mobile"
+          overlay
+          text={labels.landscapeArchitecture}
+        />
       </div>
     </div>
   )

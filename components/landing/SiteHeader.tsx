@@ -1,15 +1,20 @@
 'use client'
 
 import Link from 'next/link'
+import type {Locale, TranslationKey} from '@/lib/i18n/translations'
+import {translations} from '@/lib/i18n/translations'
 import {BiuLogo} from './BiuLogo'
 import {LanguageToggle} from './LanguageToggle'
-import {useLanguage} from './LanguageProvider'
+import {useOptionalLanguage} from './LanguageProvider'
 
 type SiteHeaderProps = {
   variant: 'desktop' | 'mobile'
   theme?: 'light' | 'about'
   currentPage?: 'home' | 'about'
   logoHref?: string
+  labels?: Record<TranslationKey, string>
+  locale?: Locale
+  onLocaleChange?: (locale: Locale) => void
 }
 
 export function SiteHeader({
@@ -17,8 +22,13 @@ export function SiteHeader({
   theme = 'light',
   currentPage = 'home',
   logoHref,
+  labels,
+  locale,
+  onLocaleChange,
 }: SiteHeaderProps) {
-  const {t} = useLanguage()
+  const language = useOptionalLanguage()
+  const t = (key: TranslationKey) =>
+    labels?.[key] ?? language?.t(key) ?? translations.en[key]
   const isAboutTheme = theme === 'about'
   const textClass = isAboutTheme ? 'text-about-accent' : 'text-black'
   const hoverClass = isAboutTheme ? 'hover:opacity-70' : 'hover:opacity-60'
@@ -40,10 +50,7 @@ export function SiteHeader({
     }
 
     return (
-      <Link
-        href="/about"
-        className={`text-[#707070] ${hoverClass}`}
-      >
+      <Link href="/about" className={`text-[#707070] ${hoverClass}`}>
         {t('about')}
       </Link>
     )
@@ -55,7 +62,11 @@ export function SiteHeader({
         className={`absolute right-6 top-8 z-20 flex items-center gap-6 text-[12px] font-light leading-none 3xl:text-lg 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${textClass}`}
       >
         {renderAboutLabel()}
-        <LanguageToggle theme={theme} />
+        <LanguageToggle
+          theme={theme}
+          locale={locale}
+          onLocaleChange={onLocaleChange}
+        />
       </div>
     )
   }
@@ -78,7 +89,11 @@ export function SiteHeader({
 
       <div className="flex shrink-0 items-center justify-self-end gap-2 text-[12px] font-light leading-none">
         {renderAboutLabel()}
-        <LanguageToggle theme={theme} />
+        <LanguageToggle
+          theme={theme}
+          locale={locale}
+          onLocaleChange={onLocaleChange}
+        />
       </div>
     </header>
   )

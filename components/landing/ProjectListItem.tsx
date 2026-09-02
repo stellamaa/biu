@@ -2,9 +2,7 @@
 
 import Link from 'next/link'
 import {forwardRef, type CSSProperties} from 'react'
-import {useRouter} from 'next/navigation'
 import {getProjectPath} from '@/lib/project/url'
-import {navigateWithTransition} from '@/lib/navigation/pageTransition'
 import {useLanguage} from './LanguageProvider'
 import type {LandingProject} from '@/types/schema'
 
@@ -22,7 +20,6 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
     {project, index, isActive, variant, onActivate, style},
     ref,
   ) {
-    const router = useRouter()
     const {t} = useLanguage()
     const title = project.title ?? 'Untitled'
     const inProgress =
@@ -30,10 +27,6 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
         ? ` (${t('inProgress')})`
         : ''
     const projectHref = getProjectPath(project)
-
-    const goToProject = () => {
-      navigateWithTransition(router, projectHref)
-    }
 
     if (variant === 'desktop') {
       const colorClass = isActive
@@ -72,9 +65,9 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
         className="flex items-center"
         style={style}
       >
-        <button
-          type="button"
-          onClick={goToProject}
+        <Link
+          href={projectHref}
+          onClick={onActivate}
           className={`flex w-full items-baseline gap-2 px-5 py-1 text-left text-sm transition-colors duration-200 ${
             isActive ? 'font-medium text-black' : 'text-neutral-400'
           }`}
@@ -84,7 +77,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
             {title}
             {inProgress}
           </span>
-        </button>
+        </Link>
       </li>
     )
   },

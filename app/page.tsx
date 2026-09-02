@@ -1,28 +1,50 @@
-export const dynamic = 'force-dynamic'
-
 import {preload} from 'react-dom'
 import {LandingPage} from '@/components/landing/LandingPage'
 import {getServerLocale} from '@/lib/i18n/getServerLocale'
-import {sanityClient} from '@/sanity/lib/client'
-import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
-import {landingProjectsQuery} from '@/sanity/lib/queries'
+import {getLandingProjects} from '@/lib/sanity/getLandingProjects'
+import {
+  getMobileHeroImageSources,
+  getMobileHeroImageUrl,
+} from '@/sanity/lib/image'
+
+export const revalidate = 120
 
 export default async function Home() {
-  const locale = await getServerLocale()
-  const projects = await sanityClient.fetch(landingProjectsQuery)
-  const firstProject = projects?.[0] ?? null
-  const lcpImageUrl = getSanityImageUrl(firstProject?.mainImage, {
-    width: sanityImageWidths.mobileHero,
+  const [locale, projects] = await Promise.all([
+    getServerLocale(),
+    getLandingProjects(),
+  ])
+
+  projects.forEach((project, index) => {
+    const sources = getMobileHeroImageSources(project.mainImage)
+    if (!sources) return
+
+    preload(sources.src, {
+      as: 'image',
+      fetchPriority: index === 0 ? 'high' : 'auto',
+      ...(index === 0
+        ? {imageSrcSet: sources.srcSet, imageSizes: '100vw'}
+        : {}),
+    })
   })
 
-  if (lcpImageUrl) {
-    preload(lcpImageUrl, {
-      as: 'image',
-      fetchPriority: 'high',
-    })
-  }
-
   return (
-    <LandingPage projects={projects ?? []} initialLocale={locale} />
+    <>
+      {projects.map((project, index) => {
+        const href = getMobileHeroImageUrl(project.mainImage)
+        if (!href) return null
+
+        return (
+          <link
+            key={project._id}
+            rel="preload"
+            as="image"
+            href={href}
+            fetchPriority={index === 0 ? 'high' : 'low'}
+          />
+        )
+      })}
+      <LandingPage projects={projects} initialLocale={locale} />
+    </>
   )
 }

@@ -15,6 +15,7 @@ import {
   type TranslationKey,
 } from '@/lib/i18n/translations'
 import {DEFAULT_LOCALE} from '@/lib/i18n/constants'
+import {persistLocale} from '@/lib/i18n/persistLocale'
 
 type LanguageContextValue = {
   locale: Locale
@@ -22,7 +23,7 @@ type LanguageContextValue = {
   t: (key: TranslationKey) => string
 }
 
-const LanguageContext = createContext<LanguageContextValue | null>(null)
+export const LanguageContext = createContext<LanguageContextValue | null>(null)
 
 type LanguageProviderProps = {
   children: ReactNode
@@ -45,14 +46,7 @@ export function LanguageProvider({
       if (next === locale) return
 
       setLocaleState(next)
-      document.documentElement.lang = next
-
-      void fetch('/api/locale', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({locale: next}),
-        credentials: 'same-origin',
-      })
+      void persistLocale(next)
     },
     [locale],
   )
@@ -78,4 +72,8 @@ export function useLanguage() {
     throw new Error('useLanguage must be used within LanguageProvider')
   }
   return context
+}
+
+export function useOptionalLanguage() {
+  return useContext(LanguageContext)
 }

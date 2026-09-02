@@ -48,7 +48,7 @@ export function ProjectHeroImage({
           alt={project?.mainImage?.alt ?? project?.title ?? 'Project image'}
           fill
           priority={priority}
-          className="object-cover transition-opacity duration-500"
+          className="object-cover"
           sizes="50vw"
         />
       </div>
@@ -69,7 +69,7 @@ export function ProjectHeroImage({
         alt={project?.mainImage?.alt ?? project?.title ?? 'Project image'}
         fill
         priority={priority}
-        className="object-cover transition-opacity duration-500"
+        className="object-cover"
         sizes="100vw"
       />
     </div>

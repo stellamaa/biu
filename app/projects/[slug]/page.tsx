@@ -46,17 +46,16 @@ export default async function ProjectPage({params}: ProjectPageProps) {
   if (!prepared) notFound()
 
   const galleryImages = getProjectGalleryImages(prepared)
-  galleryImages.forEach((image, index) => {
-    const url = getSanityImageUrl(image, {
-      width: sanityImageWidths.mobileGallery,
-    })
-    if (!url) return
-
-    preload(url, {
-      as: 'image',
-      fetchPriority: index === 0 ? 'high' : 'auto',
-    })
+  const firstImageUrl = getSanityImageUrl(galleryImages[0], {
+    width: sanityImageWidths.mobileGallery,
   })
+
+  if (firstImageUrl) {
+    preload(firstImageUrl, {
+      as: 'image',
+      fetchPriority: 'high',
+    })
+  }
 
   return <ProjectDetailView project={prepared} initialLocale={locale} />
 }
