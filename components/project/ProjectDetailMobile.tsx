@@ -92,7 +92,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
             <button
               type="button"
               onClick={handleToggleInfo}
-              className="max-w-[6rem] text-left text-[12px] font-light leading-snug text-black"
+              className="max-w-[8rem] text-left text-[12px] mt-1 font-light leading-snug text-black"
             >
               {t('projectInfo')} {infoOpen ? '−' : '+'}
             </button>
