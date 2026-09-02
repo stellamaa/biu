@@ -24,7 +24,7 @@ type MobileLandingProps = {
 
 const HOLD_MS = 3000
 const PAUSE_AFTER_INTERACTION_MS = 5000
-const ITEM_HEIGHT = 28
+const ITEM_HEIGHT = 24
 const SCROLL_END_DEBOUNCE_MS = 120
 const AUTO_SCROLL_START_DELAY_MS = 6000
 

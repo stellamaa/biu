@@ -220,11 +220,11 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                   />
 
                   {infoOpen && activeInfoIndex === index ? (
-                    <div className="absolute inset-0 z-20 flex flex-col bg-white/40">
+                    <div className="absolute inset-0 z-20 flex flex-col overflow-hidden bg-white/40">
                       <button
                         type="button"
                         onClick={() => setInfoOpen(false)}
-                        className="absolute right-4 top-4 z-10 p-1"
+                        className="absolute right-4 top-4 z-30 shrink-0 p-1"
                         aria-label="Close project info"
                       >
                         <Image
@@ -236,8 +236,11 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                           className="h-7 w-7 object-contain"
                         />
                       </button>
-                      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-16">
-                        <p className="whitespace-pre-line text-sm leading-snug tracking-[0.04em] text-black">
+                      <div
+                        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 pb-8 pt-16 [-webkit-overflow-scrolling:touch] touch-pan-y"
+                        onTouchMove={(event) => event.stopPropagation()}
+                      >
+                        <p className="whitespace-pre-line text-sm leading-relaxed tracking-[0.04em] text-black">
                           {description}
                         </p>
                       </div>

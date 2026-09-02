@@ -33,13 +33,13 @@ export function MobileProjectListItem({
   return (
     <li
       data-project-id={project._id}
-      className="flex h-7 items-center"
+      className="flex h-6 items-center"
       style={style}
     >
       <Link
         href={getProjectPath(project)}
         onClick={onActivate}
-        className={`flex w-full items-baseline gap-2 px-5 py-1 text-left text-sm transition-colors duration-200 ${
+        className={`flex w-full items-baseline gap-2 px-5 py-0.5 text-left text-sm transition-colors duration-200 ${
           isActive ? 'font-medium text-black' : 'text-neutral-400'
         }`}
       >
