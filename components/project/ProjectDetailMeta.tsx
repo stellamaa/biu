@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import {useLanguage} from '@/components/landing/LanguageProvider'
 
 type ProjectDetailMetaProps = {
@@ -20,11 +19,7 @@ export function ProjectDetailMeta({
   const isFinished = finalizado === true
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs lg:text-sm 3xl:gap-x-6 3xl:text-lg">
-      <Link href="/" className="text-neutral-300 hover:text-neutral-500">
-        {t('projects')}
-      </Link>
-
+    <div className="grid w-full grid-cols-4 items-center gap-x-6 gap-y-0 text-[12px] leading-tight text-black 3xl:text-lg">
       <div className="flex items-center gap-2 3xl:gap-2.5">
         <span
           className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full 3xl:h-3 3xl:w-3 ${
@@ -32,14 +27,12 @@ export function ProjectDetailMeta({
           }`}
           aria-hidden
         />
-        <span className="text-black">
-          {isFinished ? t('finalizado') : t('inProgress')}
-        </span>
+        <span>{isFinished ? t('finalizado') : t('inProgress')}</span>
       </div>
 
-      <span className="text-black">{location}</span>
+      <span>{location}</span>
 
-      <div className="flex items-center gap-1.5 text-black 3xl:gap-2">
+      <div className="flex items-center gap-1.5 3xl:gap-2">
         <span
           className="inline-block h-2 w-2 shrink-0 border border-black 3xl:h-2.5 3xl:w-2.5"
           aria-hidden
@@ -47,7 +40,7 @@ export function ProjectDetailMeta({
         <span>{size}</span>
       </div>
 
-      <span className="text-black">{year}</span>
+      <span>{year}</span>
     </div>
   )
 }

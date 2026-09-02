@@ -18,7 +18,7 @@ export function ProjectSketch({project}: ProjectSketchProps) {
   }
 
   return (
-    <div className="flex shrink-0 justify-center px-5 pt-6 lg:px-6 lg:pt-10 3xl:px-8 3xl:pt-12">
+    <div className="flex shrink-0 justify-center">
       <div className="relative aspect-[4/3] w-full max-w-[min(100%,360px)] 3xl:max-w-2xl">
         <SanityImage
           key={project?._id ?? 'empty'}

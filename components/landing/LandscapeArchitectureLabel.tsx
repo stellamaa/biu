@@ -1,5 +1,6 @@
 'use client'
 
+import {landingDesktopLabelTextClass} from '@/lib/layout/landingDesktopTypography'
 import {translations} from '@/lib/i18n/translations'
 import {useOptionalLanguage} from './LanguageProvider'
 
@@ -27,7 +28,11 @@ export function LandscapeArchitectureLabel({
   if (variant === 'desktop') {
     return (
       <p
-        className={`text-[14px] leading-none tracking-wide 3xl:text-xl 4xl:text-3xl ${colorClass}`}
+        className={`${
+          theme === 'about'
+            ? 'text-base leading-none tracking-wide 3xl:text-3xl 4xl:text-4xl'
+            : landingDesktopLabelTextClass
+        } ${colorClass}`}
       >
         {label}
       </p>

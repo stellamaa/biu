@@ -12,7 +12,7 @@ export const translations = {
     projectInfo: 'Project info',
   },
   es: {
-    landscapeArchitecture: 'Arquitectura del paisaje',
+    landscapeArchitecture: 'Arquitectura del Paisaje',
     projects: 'Proyectos',
     about: 'Acerca',
     inProgress: 'en desarrollo',

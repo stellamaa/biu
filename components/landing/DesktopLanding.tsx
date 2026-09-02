@@ -1,6 +1,11 @@
 'use client'
 
 import {useMemo, useState} from 'react'
+import {
+  desktopLeftColumnClass,
+  desktopLeftIntroClass,
+} from '@/lib/layout/desktopLeftColumn'
+import {landingDesktopBodyTextClass} from '@/lib/layout/landingDesktopTypography'
 import {PageTopBar} from '@/components/site/PageTopBar'
 import {ProjectHeroImage} from './ProjectHeroImage'
 import {ProjectListItem} from './ProjectListItem'
@@ -12,6 +17,9 @@ type DesktopLandingProps = {
   projects: LandingProject[]
 }
 
+/** Default list row height at lg; 4K uses min-height from item class. */
+const DESKTOP_LIST_ITEM_HEIGHT = 15
+
 export function DesktopLanding({projects}: DesktopLandingProps) {
   const [activeId, setActiveId] = useState(projects[0]?._id ?? '')
 
@@ -22,7 +30,7 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
 
   return (
     <div className="hidden h-dvh lg:grid lg:grid-cols-[1.08fr_0.92fr]">
-      <section className="relative flex min-h-0 flex-col bg-white">
+      <section className="relative h-dvh overflow-hidden bg-white">
         <PageTopBar
           theme="light"
           currentPage="home"
@@ -30,32 +38,38 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
           showDesktopNav={false}
           logoHref="/"
           alignWithContent
+          landscapeLabelPosition="top-left"
         />
 
-        <div className="flex min-h-0 flex-1 flex-col">
-          <ProjectSketch project={activeProject} />
-
-          <div className="flex min-h-0 flex-1 flex-col justify-end px-5 pb-[14vh] lg:px-6 3xl:px-8 3xl:pb-[16vh]">
-            {projects.length > 0 ? (
-              <ul className="w-full space-y-0">
-                {projects.map((project, index) => (
-                  <ProjectListItem
-                    key={project._id}
-                    project={project}
-                    index={index}
-                    isActive={project._id === activeId}
-                    variant="desktop"
-                    onActivate={() => setActiveId(project._id)}
-                  />
-                ))}
-              </ul>
-            ) : (
-              <p className="text-[12px] text-neutral-300 3xl:text-lg">
-                No projects published yet.
-              </p>
-            )}
+        <div className={`${desktopLeftColumnClass} pointer-events-none !pb-0`}>
+          <div className={desktopLeftIntroClass}>
+            <ProjectSketch project={activeProject} />
           </div>
         </div>
+
+        {projects.length > 0 ? (
+          <div className="desktop-landing-scroll pointer-events-auto absolute inset-x-0 bottom-0 top-[46vh] overflow-y-auto overscroll-none px-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:px-6 3xl:top-[44vh] 3xl:px-8">
+            <ul className="w-full space-y-0">
+              {projects.map((project, index) => (
+                <ProjectListItem
+                  key={project._id}
+                  project={project}
+                  index={index}
+                  isActive={project._id === activeId}
+                  variant="desktop"
+                  onActivate={() => setActiveId(project._id)}
+                  style={{height: DESKTOP_LIST_ITEM_HEIGHT}}
+                />
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p
+            className={`absolute inset-x-0 bottom-18 px-5 text-neutral-300 lg:px-6 3xl:px-8 ${landingDesktopBodyTextClass}`}
+          >
+            No projects published yet.
+          </p>
+        )}
       </section>
 
       <section className="relative min-h-0">

@@ -1,18 +1,10 @@
 import type {Metadata} from 'next'
-import localFont from 'next/font/local'
 import {cookies} from 'next/headers'
 import {PageTransition} from '@/components/PageTransition'
+import {abcFavorit} from '@/app/fonts'
 import {DEFAULT_LOCALE, LOCALE_COOKIE} from '@/lib/i18n/constants'
 import {SITE_URL} from '@/lib/site'
 import './globals.css'
-
-const abcFavorit = localFont({
-  src: './fonts/ABCFavorit-Regular-Trial.otf',
-  variable: '--font-abc-favorit',
-  display: 'swap',
-  weight: '400',
-  style: 'normal',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

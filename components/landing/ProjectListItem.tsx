@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import {forwardRef, type CSSProperties} from 'react'
 import {getProjectPath} from '@/lib/project/url'
+import {desktopProjectListGridClass, desktopProjectListItemClass} from '@/lib/layout/desktopProjectListLayout'
 import {useLanguage} from './LanguageProvider'
 import type {LandingProject} from '@/types/schema'
 
@@ -32,23 +33,28 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
       const colorClass = isActive
         ? 'font-medium text-black'
         : 'text-neutral-300 hover:text-neutral-500'
+      const number = String(index + 1).padStart(3, '0')
 
       return (
-        <li ref={ref}>
+        <li ref={ref} style={style}>
           <Link
             href={projectHref}
             onMouseEnter={onActivate}
             onFocus={onActivate}
-            className={`block w-full py-0 text-left text-[12px] leading-tight transition-colors 3xl:text-lg ${colorClass} ${
-              isActive ? 'grid grid-cols-4 gap-x-6 gap-y-0' : 'block'
-            }`}
+            className={`${desktopProjectListItemClass} ${desktopProjectListGridClass} transition-colors ${colorClass}`}
           >
-            <span className={isActive ? 'font-medium' : undefined}>{title}</span>
+            <span className="tabular-nums">{number}</span>
+            <span
+              className={`min-w-0 truncate ${isActive ? 'font-medium' : 'col-span-4'}`}
+            >
+              {title}
+              {inProgress}
+            </span>
             {isActive ? (
               <>
-                <span>{project.location}</span>
-                <span>{project.size}</span>
-                <span>{project.year}</span>
+                <span className="whitespace-nowrap">{project.location}</span>
+                <span className="whitespace-nowrap">{project.size}</span>
+                <span className="whitespace-nowrap tabular-nums">{project.year}</span>
               </>
             ) : null}
           </Link>

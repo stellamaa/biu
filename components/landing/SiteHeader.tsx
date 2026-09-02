@@ -1,5 +1,7 @@
 'use client'
 
+import {landingDesktopBodyTextClass} from '@/lib/layout/landingDesktopTypography'
+import type {ReactNode} from 'react'
 import Link from 'next/link'
 import type {Locale, TranslationKey} from '@/lib/i18n/translations'
 import {translations} from '@/lib/i18n/translations'
@@ -12,6 +14,12 @@ type SiteHeaderProps = {
   theme?: 'light' | 'about'
   currentPage?: 'home' | 'about'
   logoHref?: string
+  /** Mobile: optional top-left slot (e.g. project info toggle). */
+  mobileTopLeft?: ReactNode
+  /** Mobile: show About in the top-left instead of top-right. */
+  mobileAboutOnLeft?: boolean
+  /** Mobile: hide About link entirely. */
+  showMobileAbout?: boolean
   labels?: Record<TranslationKey, string>
   locale?: Locale
   onLocaleChange?: (locale: Locale) => void
@@ -21,7 +29,10 @@ export function SiteHeader({
   variant,
   theme = 'light',
   currentPage = 'home',
-  logoHref,
+  logoHref = '/',
+  mobileTopLeft,
+  mobileAboutOnLeft = false,
+  showMobileAbout = true,
   labels,
   locale,
   onLocaleChange,
@@ -50,7 +61,7 @@ export function SiteHeader({
     }
 
     return (
-      <Link href="/about" className={`text-[#707070] ${hoverClass}`}>
+      <Link href="/about" className={`${textClass} ${hoverClass}`}>
         {t('about')}
       </Link>
     )
@@ -59,7 +70,7 @@ export function SiteHeader({
   if (variant === 'desktop') {
     return (
       <div
-        className={`absolute right-6 top-8 z-20 flex items-center gap-6 text-[12px] font-light leading-none 3xl:text-lg 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${textClass}`}
+        className={`absolute right-6 top-8 z-20 flex items-center gap-6 font-light leading-none 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${landingDesktopBodyTextClass} ${textClass}`}
       >
         {renderAboutLabel()}
         <LanguageToggle
@@ -73,14 +84,12 @@ export function SiteHeader({
 
   return (
     <header className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center px-5 pt-8 pb-4">
-      <Link
-        href="/"
-        className={`justify-self-start text-xs md:text-sm ${textClass} ${hoverClass}`}
-      >
-        {t('projects')}
-      </Link>
+      <div className="flex shrink-0 items-center justify-self-start text-[12px] font-light leading-none">
+        {mobileTopLeft ??
+          (mobileAboutOnLeft && showMobileAbout ? renderAboutLabel() : null)}
+      </div>
 
-      <div className="justify-self-center">
+      <div className="justify-self-center font-light">
         <BiuLogo
           href={logoHref}
           className={`text-2xl ${isAboutTheme ? 'text-about-accent' : ''}`}
@@ -88,7 +97,7 @@ export function SiteHeader({
       </div>
 
       <div className="flex shrink-0 items-center justify-self-end gap-2 text-[12px] font-light leading-none">
-        {renderAboutLabel()}
+        {showMobileAbout && !mobileAboutOnLeft ? renderAboutLabel() : null}
         <LanguageToggle
           theme={theme}
           locale={locale}

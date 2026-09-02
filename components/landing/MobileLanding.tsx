@@ -238,11 +238,12 @@ export function MobileLanding({
   }, [])
 
   return (
-    <div className="flex h-dvh flex-col lg:hidden">
+    <div className="flex text-black h-dvh flex-col lg:hidden">
       <SiteHeader
         variant="mobile"
         theme="light"
         currentPage="home"
+        mobileAboutOnLeft
         labels={labels}
         locale={locale}
         onLocaleChange={setLocale}

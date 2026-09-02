@@ -1,6 +1,10 @@
 'use client'
 
 import {useContext} from 'react'
+import {
+  landingDesktopBodyTextClass,
+  landingDesktopToggleSizeClass,
+} from '@/lib/layout/landingDesktopTypography'
 import {LanguageContext} from './LanguageProvider'
 import type {Locale} from '@/lib/i18n/translations'
 
@@ -33,11 +37,16 @@ export function LanguageToggle({
   const setLocale = onLocaleChange ?? context?.setLocale
   const isAbout = theme === 'about'
   const activeIndex = LOCALE_ORDER.indexOf(locale)
+  const trackClass = isAbout ? 'bg-white' : 'bg-[#EBEBEB]'
+
+  const trackSizeClass = isAbout
+    ? '3xl:h-8 3xl:w-[6rem] 3xl:text-base'
+    : landingDesktopToggleSizeClass
 
   return (
     <div
       translate="no"
-      className="notranslate isolate relative inline-grid h-[1.5rem] w-[4.25rem] shrink-0 grid-cols-2 overflow-hidden rounded-full bg-white text-[12px] font-light leading-none 3xl:h-[1.875rem] 3xl:w-[5.25rem] 3xl:text-lg 4xl:h-[2.25rem] 4xl:w-[6.5rem] 4xl:text-2xl"
+      className={`notranslate isolate relative inline-grid h-[1.5rem] w-[4.25rem] shrink-0 grid-cols-2 overflow-hidden rounded-full font-light leading-none ${isAbout ? 'text-[12px]' : landingDesktopBodyTextClass} ${trackSizeClass} ${trackClass}`}
       role="group"
       aria-label="Language"
     >

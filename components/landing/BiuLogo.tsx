@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import {abcFavoritLight} from '@/app/fonts'
+import {landingDesktopLogoTextClass} from '@/lib/layout/landingDesktopTypography'
 
 type BiuLogoProps = {
   className?: string
@@ -8,7 +10,7 @@ type BiuLogoProps = {
 export function BiuLogo({className = '', href}: BiuLogoProps) {
   const logo = (
     <span
-      className={`text-2xl font-light tracking-tight lg:text-[25px] lg:leading-none 3xl:text-4xl ${className}`}
+      className={`${abcFavoritLight.className} text-2xl tracking-tight lg:text-[25px] lg:leading-none ${landingDesktopLogoTextClass} ${className}`}
     >
       BI&Uacute;
     </span>

@@ -2,17 +2,60 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {SanityImage} from '@/components/SanityImage'
-import {useLanguage} from '@/components/landing/LanguageProvider'
 import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
-import {getProjectGalleryImages} from '@/lib/project/gallery'
+import {
+  getGalleryImageAspectRatio,
+  getProjectGalleryImages,
+} from '@/lib/project/gallery'
 import type {PreparedProject} from '@/lib/i18n/prepareProject'
 
 type ProjectDetailGalleryProps = {
   project: PreparedProject
+  onActiveIndexChange?: (index: number) => void
 }
 
-export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
-  const {t} = useLanguage()
+function getActiveGalleryIndex(
+  container: HTMLElement,
+  itemCount: number,
+  itemRefs: Map<number, HTMLDivElement>,
+): number {
+  if (itemCount === 0) return 0
+
+  const {scrollTop, clientHeight, scrollHeight} = container
+  const maxScroll = scrollHeight - clientHeight
+
+  if (scrollTop <= 1) return 0
+  if (maxScroll <= 1 || scrollTop >= maxScroll - 1) return itemCount - 1
+
+  const viewTop = scrollTop
+  const viewBottom = scrollTop + clientHeight
+
+  let bestIndex = 0
+  let bestVisible = 0
+
+  for (let index = 0; index < itemCount; index++) {
+    const element = itemRefs.get(index)
+    if (!element) continue
+
+    const top = element.offsetTop
+    const bottom = top + element.offsetHeight
+    const visibleTop = Math.max(top, viewTop)
+    const visibleBottom = Math.min(bottom, viewBottom)
+    const visible = Math.max(0, visibleBottom - visibleTop)
+
+    if (visible > bestVisible) {
+      bestVisible = visible
+      bestIndex = index
+    }
+  }
+
+  return bestIndex
+}
+
+export function ProjectDetailGallery({
+  project,
+  onActiveIndexChange,
+}: ProjectDetailGalleryProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map())
   const [activeIndex, setActiveIndex] = useState(0)
@@ -23,54 +66,27 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
     const container = scrollRef.current
     if (!container || images.length === 0) return
 
-    const containerTop = container.getBoundingClientRect().top
-    let closestIndex = 0
-    let closestDistance = Number.POSITIVE_INFINITY
+    const nextIndex = getActiveGalleryIndex(
+      container,
+      images.length,
+      itemRefs.current,
+    )
 
-    images.forEach((_, index) => {
-      const element = itemRefs.current.get(index)
-      if (!element) return
-
-      const distance = Math.abs(element.getBoundingClientRect().top - containerTop)
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestIndex = index
-      }
-    })
-
-    setActiveIndex(closestIndex)
-  }, [images])
+    setActiveIndex((current) => (current === nextIndex ? current : nextIndex))
+  }, [images.length])
 
   useEffect(() => {
     const container = scrollRef.current
     if (!container || images.length === 0) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-
-        const top = visible[0]
-        if (!top) return
-
-        const index = Number((top.target as HTMLElement).dataset.index)
-        if (!Number.isNaN(index)) setActiveIndex(index)
-      },
-      {
-        root: container,
-        threshold: [0.35, 0.5, 0.65],
-      },
-    )
-
-    images.forEach((_, index) => {
-      const element = itemRefs.current.get(index)
-      if (element) observer.observe(element)
-    })
-
     updateActiveIndex()
+
     container.addEventListener('scroll', updateActiveIndex, {passive: true})
     window.addEventListener('resize', updateActiveIndex)
+
+    const observer = new ResizeObserver(updateActiveIndex)
+    observer.observe(container)
+    itemRefs.current.forEach((element) => observer.observe(element))
 
     return () => {
       observer.disconnect()
@@ -79,19 +95,26 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
     }
   }, [images, updateActiveIndex])
 
+  useEffect(() => {
+    onActiveIndexChange?.(activeIndex)
+  }, [activeIndex, onActiveIndexChange])
+
   if (images.length === 0) {
     return <div className="h-full w-full bg-neutral-100" />
   }
 
   return (
-    <div className="relative flex h-full min-h-0 flex-col bg-white lg:absolute lg:inset-0">
+    <div className="relative h-full min-h-0 lg:absolute lg:inset-0">
       <div
         ref={scrollRef}
-        className="min-h-0 flex-1 snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth"
+        className="h-full snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth"
       >
         {images.map((image, index) => {
+          const aspectRatio = getGalleryImageAspectRatio(image)
+          const displayWidth = sanityImageWidths.desktopGallery
+          const displayHeight = Math.round(displayWidth / aspectRatio)
           const src = getSanityImageUrl(image, {
-            width: sanityImageWidths.desktopGallery,
+            width: displayWidth,
           })
           if (!src) return null
 
@@ -103,25 +126,21 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
                 if (node) itemRefs.current.set(index, node)
                 else itemRefs.current.delete(index)
               }}
-              className="relative min-h-full shrink-0 snap-start lg:h-[80vh] lg:min-h-[80vh]"
+              className="relative w-full shrink-0 snap-start bg-white"
             >
               <SanityImage
                 src={src}
                 alt={image.alt ?? `${project.title ?? 'Project'} image ${index + 1}`}
-                fill
-                className="object-cover"
+                width={displayWidth}
+                height={displayHeight}
+                className="h-auto w-full pb-1"
                 sizes="45vw"
                 priority={index === 0}
+                onLoad={updateActiveIndex}
               />
             </div>
           )
         })}
-      </div>
-
-      <div className="flex shrink-0 items-center justify-end bg-white px-6 pb-2 pt-3 3xl:px-8 3xl:pb-4 3xl:pt-4">
-        <p className="text-xs text-neutral-400 lg:text-sm 3xl:text-base">
-          {activeIndex + 1}/{images.length} {t('images')}
-        </p>
       </div>
     </div>
   )
