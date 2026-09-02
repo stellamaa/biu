@@ -149,40 +149,40 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
                       priority={index === 0}
                       loading={index === 0 ? 'eager' : 'lazy'}
                     />
-
-                    {infoOpen && activeInfoIndex === index ? (
-                      <div className="absolute inset-0 z-20 flex flex-col overflow-hidden bg-white/40">
-                        <button
-                          type="button"
-                          onClick={() => setInfoOpen(false)}
-                          className="absolute right-4 top-4 z-30 shrink-0 p-1"
-                          aria-label="Close project info"
-                        >
-                          <Image
-                            src="/icons/close-thin.svg"
-                            alt=""
-                            width={28}
-                            height={28}
-                            aria-hidden
-                            className="h-7 w-7 object-contain"
-                          />
-                        </button>
-                        <div
-                          className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 pb-8 pt-16 [-webkit-overflow-scrolling:touch] touch-pan-y"
-                          onTouchMove={(event) => event.stopPropagation()}
-                        >
-                          <p className="whitespace-pre-line text-sm leading-relaxed tracking-[0.04em] text-black">
-                            {description}
-                          </p>
-                        </div>
-                      </div>
-                    ) : null}
                   </div>
                 )
               })}
             </>
           )}
         </div>
+
+        {infoOpen && description ? (
+          <div className="absolute inset-0 z-20 flex flex-col overflow-hidden bg-white/40">
+            <button
+              type="button"
+              onClick={() => setInfoOpen(false)}
+              className="absolute right-4 top-4 z-30 shrink-0 p-1"
+              aria-label="Close project info"
+            >
+              <Image
+                src="/icons/close-thin.svg"
+                alt=""
+                width={28}
+                height={28}
+                aria-hidden
+                className="h-7 w-7 object-contain"
+              />
+            </button>
+            <div
+              className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 pb-8 pt-16 [-webkit-overflow-scrolling:touch] touch-pan-y"
+              onTouchMove={(event) => event.stopPropagation()}
+            >
+              <p className="whitespace-pre-line text-sm leading-relaxed tracking-[0.04em] text-black">
+                {description}
+              </p>
+            </div>
+          </div>
+        ) : null}
 
         <div
           className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-4 px-5 pb-4 ${mobileBlendClass}`}
