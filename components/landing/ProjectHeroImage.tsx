@@ -1,6 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import {SanityImage} from '@/components/SanityImage'
+import {getProjectPath} from '@/lib/project/url'
 import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import type {LandingProject} from '@/types/schema'
 
@@ -40,17 +42,31 @@ export function ProjectHeroImage({
   }
 
   if (variant === 'desktop') {
+    const image = (
+      <SanityImage
+        key={project?._id ?? 'empty'}
+        src={src}
+        alt={project?.mainImage?.alt ?? project?.title ?? 'Project image'}
+        fill
+        priority={priority}
+        className="object-cover"
+        sizes="50vw"
+      />
+    )
+
     return (
       <div className="relative h-full w-full">
-        <SanityImage
-          key={project?._id ?? 'empty'}
-          src={src}
-          alt={project?.mainImage?.alt ?? project?.title ?? 'Project image'}
-          fill
-          priority={priority}
-          className="object-cover"
-          sizes="50vw"
-        />
+        {project ? (
+          <Link
+            href={getProjectPath(project)}
+            className="relative block h-full w-full"
+            aria-label={project.title ?? 'View project'}
+          >
+            {image}
+          </Link>
+        ) : (
+          image
+        )}
       </div>
     )
   }

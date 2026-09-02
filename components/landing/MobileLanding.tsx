@@ -2,8 +2,10 @@
 
 import type {ReactNode} from 'react'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import Link from 'next/link'
 import {getLabels} from '@/lib/i18n/getLabels'
 import {persistLocale} from '@/lib/i18n/persistLocale'
+import {getProjectPath} from '@/lib/project/url'
 import type {Locale} from '@/lib/i18n/translations'
 import {LandscapeArchitectureLabel} from './LandscapeArchitectureLabel'
 import {MobileLandingHeroFrame} from './MobileLandingHeroFrame'
@@ -59,8 +61,9 @@ export function MobileLanding({
 
   const activeProjectIndex =
     projects.length > 0 ? trackIndex % projects.length : 0
+  const activeProject = projects[activeProjectIndex] ?? null
   const activeLqip =
-    projects[activeProjectIndex]?.mainImage?.asset?.metadata?.lqip ?? null
+    activeProject?.mainImage?.asset?.metadata?.lqip ?? null
   const listViewportHeight = projects.length * ITEM_HEIGHT
   const cycleHeight = projects.length * ITEM_HEIGHT
 
@@ -249,13 +252,29 @@ export function MobileLanding({
         onLocaleChange={setLocale}
       />
       <div className="shrink-0 px-5 pt-1">
-        <MobileLandingHeroFrame
-          activeIndex={activeProjectIndex}
-          projectCount={projects.length}
-          lqip={activeLqip}
-        >
-          {heroImages}
-        </MobileLandingHeroFrame>
+        {activeProject ? (
+          <Link
+            href={getProjectPath(activeProject)}
+            className="block"
+            aria-label={activeProject.title ?? 'View project'}
+          >
+            <MobileLandingHeroFrame
+              activeIndex={activeProjectIndex}
+              projectCount={projects.length}
+              lqip={activeLqip}
+            >
+              {heroImages}
+            </MobileLandingHeroFrame>
+          </Link>
+        ) : (
+          <MobileLandingHeroFrame
+            activeIndex={activeProjectIndex}
+            projectCount={projects.length}
+            lqip={activeLqip}
+          >
+            {heroImages}
+          </MobileLandingHeroFrame>
+        )}
       </div>
 
       <div className="relative min-h-0 flex-1 overflow-hidden pt-4">

@@ -48,7 +48,7 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
         </div>
 
         {projects.length > 0 ? (
-          <div className="desktop-landing-scroll pointer-events-auto absolute inset-x-0 bottom-0 top-[46vh] overflow-y-auto overscroll-none px-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:px-6 3xl:top-[44vh] 3xl:px-8">
+          <div className="desktop-landing-scroll pointer-events-auto absolute inset-x-0 bottom-0 top-[50vh] overflow-y-auto overscroll-none px-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:px-6 3xl:top-[44vh] 3xl:px-8">
             <ul className="w-full space-y-0">
               {projects.map((project, index) => (
                 <ProjectListItem
