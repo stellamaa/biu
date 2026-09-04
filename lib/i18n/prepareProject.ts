@@ -4,6 +4,7 @@ import type {Locale} from './translations'
 
 export type PreparedProject = NonNullable<ProjectBySlugQueryResult> & {
   descriptionDisplay: string
+  descriptionLocale: Locale
 }
 
 export async function prepareProject(
@@ -17,5 +18,6 @@ export async function prepareProject(
   return {
     ...project,
     descriptionDisplay,
+    descriptionLocale: locale,
   }
 }

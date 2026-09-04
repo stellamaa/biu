@@ -1,6 +1,5 @@
 import {preload} from 'react-dom'
 import {LandingPage} from '@/components/landing/LandingPage'
-import {getServerLocale} from '@/lib/i18n/getServerLocale'
 import {getLandingProjects} from '@/lib/sanity/getLandingProjects'
 import {
   getMobileHeroImageSources,
@@ -10,10 +9,7 @@ import {
 export const revalidate = 120
 
 export default async function Home() {
-  const [locale, projects] = await Promise.all([
-    getServerLocale(),
-    getLandingProjects(),
-  ])
+  const projects = await getLandingProjects()
 
   projects.forEach((project, index) => {
     const sources = getMobileHeroImageSources(project.mainImage)
@@ -44,7 +40,7 @@ export default async function Home() {
           />
         )
       })}
-      <LandingPage projects={projects} initialLocale={locale} />
+      <LandingPage projects={projects} />
     </>
   )
 }

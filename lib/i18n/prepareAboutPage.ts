@@ -4,6 +4,7 @@ import type {Locale} from './translations'
 
 export type PreparedAboutPage = NonNullable<AboutPageQueryResult> & {
   biuDescriptionDisplay: string
+  biuDescriptionLocale: Locale
 }
 
 export async function prepareAboutPage(
@@ -17,5 +18,6 @@ export async function prepareAboutPage(
   return {
     ...about,
     biuDescriptionDisplay,
+    biuDescriptionLocale: locale,
   }
 }

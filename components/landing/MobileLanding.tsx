@@ -4,9 +4,8 @@ import type {ReactNode} from 'react'
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import Link from 'next/link'
 import {getLabels} from '@/lib/i18n/getLabels'
-import {persistLocale} from '@/lib/i18n/persistLocale'
 import {getProjectPath} from '@/lib/project/url'
-import type {Locale} from '@/lib/i18n/translations'
+import {useLanguage} from './LanguageProvider'
 import {LandscapeArchitectureLabel} from './LandscapeArchitectureLabel'
 import {MobileLandingHeroFrame} from './MobileLandingHeroFrame'
 import {MobileProjectListItem} from './MobileProjectListItem'
@@ -20,7 +19,6 @@ type MobileLandingProject = Pick<
 
 type MobileLandingProps = {
   projects: MobileLandingProject[]
-  initialLocale: Locale
   heroImages: ReactNode
 }
 
@@ -32,7 +30,6 @@ const AUTO_SCROLL_START_DELAY_MS = 6000
 
 export function MobileLanding({
   projects,
-  initialLocale,
   heroImages,
 }: MobileLandingProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -43,16 +40,11 @@ export function MobileLanding({
   const isAutoScrollingRef = useRef(false)
   const userInteractingRef = useRef(false)
 
-  const [locale, setLocaleState] = useState(initialLocale)
+  const {locale} = useLanguage()
   const [trackIndex, setTrackIndex] = useState(0)
 
   const labels = getLabels(locale)
   trackIndexRef.current = trackIndex
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next)
-    void persistLocale(next)
-  }, [])
 
   const loopProjects = useMemo(() => {
     if (projects.length === 0) return []
@@ -248,8 +240,6 @@ export function MobileLanding({
         currentPage="home"
         mobileAboutOnLeft
         labels={labels}
-        locale={locale}
-        onLocaleChange={setLocale}
       />
       <div className="shrink-0 px-5 pt-1">
         {activeProject ? (

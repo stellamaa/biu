@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {cookies} from 'next/headers'
+import {LocaleShell} from '@/components/LocaleShell'
 import {PageTransition} from '@/components/PageTransition'
 import {abcFavorit} from '@/app/fonts'
 import {DEFAULT_LOCALE, LOCALE_COOKIE} from '@/lib/i18n/constants'
@@ -40,8 +41,10 @@ export default async function RootLayout({
     >
       <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="" />
       <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-      <body className="min-h-full flex flex-col bg-white font-sans text-black">
-        <PageTransition>{children}</PageTransition>
+      <body className="flex min-h-full flex-col font-sans text-black">
+        <LocaleShell initialLocale={locale}>
+          <PageTransition>{children}</PageTransition>
+        </LocaleShell>
       </body>
     </html>
   )

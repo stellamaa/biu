@@ -1,12 +1,10 @@
-import type {Locale} from '@/lib/i18n/translations'
+import type {LandingProject} from '@/types/schema'
 import {DesktopLandingLazy} from './DesktopLandingLazy'
 import {MobileLanding} from './MobileLanding'
 import {MobileLandingHeroImages} from './MobileLandingHeroImages'
-import type {LandingProject} from '@/types/schema'
 
 type LandingPageProps = {
   projects: LandingProject[]
-  initialLocale: Locale
 }
 
 /** Slim project shape for mobile — avoids serializing sketch/metadata to the client. */
@@ -20,15 +18,14 @@ function toMobileProjects(projects: LandingProject[]) {
   }))
 }
 
-export function LandingPage({projects, initialLocale}: LandingPageProps) {
+export function LandingPage({projects}: LandingPageProps) {
   const mobileProjects = toMobileProjects(projects)
 
   return (
     <main className="bg-white text-black">
-      <DesktopLandingLazy projects={projects} initialLocale={initialLocale} />
+      <DesktopLandingLazy projects={projects} />
       <MobileLanding
         projects={mobileProjects}
-        initialLocale={initialLocale}
         heroImages={<MobileLandingHeroImages projects={mobileProjects} />}
       />
     </main>

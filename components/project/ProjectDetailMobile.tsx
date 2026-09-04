@@ -19,10 +19,10 @@ const mobileBlendClass = 'text-white mix-blend-difference'
 
 export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   const {t} = useLanguage()
-  const description = useCmsText(
-    project.description,
-    project.descriptionDisplay,
-  )
+  const description = useCmsText(project.description, {
+    initialDisplay: project.descriptionDisplay,
+    preparedLocale: project.descriptionLocale,
+  })
   const [infoOpen, setInfoOpen] = useState(false)
   const [activeInfoIndex, setActiveInfoIndex] = useState(0)
   const galleryRef = useRef<HTMLDivElement>(null)

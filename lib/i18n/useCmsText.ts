@@ -30,15 +30,48 @@ async function fetchTranslation(text: string, locale: Locale): Promise<string> {
   return translated
 }
 
+function resolveDisplay(
+  source: string,
+  locale: Locale,
+  initialDisplay?: string,
+  preparedLocale?: Locale,
+): string {
+  if (!source) return ''
+
+  if (locale === 'es') return source
+
+  const cached = translationCache.get(cacheKey(source, 'en'))
+  if (cached) return cached
+
+  if (preparedLocale === 'en' && initialDisplay) return initialDisplay
+
+  return source
+}
+
+type UseCmsTextOptions = {
+  initialDisplay?: string
+  preparedLocale?: Locale
+}
+
 /** CMS copy is authored in Spanish; English is fetched on demand. */
 export function useCmsText(
   sourceText: string | null | undefined,
-  initialDisplay?: string,
+  initialDisplayOrOptions?: string | UseCmsTextOptions,
+  preparedLocaleLegacy?: Locale,
 ) {
+  const options: UseCmsTextOptions =
+    typeof initialDisplayOrOptions === 'string'
+      ? {
+          initialDisplay: initialDisplayOrOptions,
+          preparedLocale: preparedLocaleLegacy,
+        }
+      : (initialDisplayOrOptions ?? {})
+
+  const {initialDisplay, preparedLocale} = options
   const {locale} = useLanguage()
   const source = sourceText?.trim() ?? ''
-  const [display, setDisplay] = useState(
-    () => initialDisplay ?? sourceText ?? '',
+  const [display, setDisplay] = useState(() =>
+    resolveDisplay(source, locale, initialDisplay, preparedLocale),
   )
 
   useEffect(() => {
@@ -52,27 +85,28 @@ export function useCmsText(
       return
     }
 
-    const key = cacheKey(source, locale)
+    const key = cacheKey(source, 'en')
     const cached = translationCache.get(key)
     if (cached) {
       setDisplay(cached)
       return
     }
 
-    if (initialDisplay) {
-      translationCache.set(cacheKey(source, 'en'), initialDisplay)
+    if (preparedLocale === 'en' && initialDisplay) {
+      translationCache.set(key, initialDisplay)
       setDisplay(initialDisplay)
+      return
     }
 
     let cancelled = false
-    void fetchTranslation(source, locale).then((text) => {
+    void fetchTranslation(source, 'en').then((text) => {
       if (!cancelled) setDisplay(text)
     })
 
     return () => {
       cancelled = true
     }
-  }, [source, locale, initialDisplay, sourceText])
+  }, [source, locale, initialDisplay, preparedLocale])
 
   return display
 }

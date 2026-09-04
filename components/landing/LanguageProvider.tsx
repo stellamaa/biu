@@ -6,16 +6,22 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react'
+import {DEFAULT_LOCALE} from '@/lib/i18n/constants'
+import {
+  getLocaleSnapshot,
+  initLocaleClient,
+  setLocaleClient,
+  subscribeLocale,
+} from '@/lib/i18n/localeClient'
+import {persistLocale} from '@/lib/i18n/persistLocale'
 import {
   translations,
   type Locale,
   type TranslationKey,
 } from '@/lib/i18n/translations'
-import {DEFAULT_LOCALE} from '@/lib/i18n/constants'
-import {persistLocale} from '@/lib/i18n/persistLocale'
 
 type LanguageContextValue = {
   locale: Locale
@@ -34,22 +40,27 @@ export function LanguageProvider({
   children,
   initialLocale = DEFAULT_LOCALE,
 }: LanguageProviderProps) {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale)
+  const locale = useSyncExternalStore(
+    subscribeLocale,
+    () => {
+      initLocaleClient(initialLocale)
+      return getLocaleSnapshot()
+    },
+    () => initialLocale,
+  )
 
   useEffect(() => {
-    setLocaleState(initialLocale)
-    document.documentElement.lang = initialLocale
+    initLocaleClient(initialLocale)
   }, [initialLocale])
 
-  const setLocale = useCallback(
-    (next: Locale) => {
-      if (next === locale) return
+  useEffect(() => {
+    document.documentElement.lang = locale
+  }, [locale])
 
-      setLocaleState(next)
-      void persistLocale(next)
-    },
-    [locale],
-  )
+  const setLocale = useCallback((next: Locale) => {
+    setLocaleClient(next)
+    void persistLocale(next)
+  }, [])
 
   const t = useCallback(
     (key: TranslationKey) => translations[locale][key],

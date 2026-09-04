@@ -3,7 +3,7 @@
 import {landingDesktopBodyTextClass} from '@/lib/layout/landingDesktopTypography'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
-import type {Locale, TranslationKey} from '@/lib/i18n/translations'
+import type {TranslationKey} from '@/lib/i18n/translations'
 import {translations} from '@/lib/i18n/translations'
 import {BiuLogo} from './BiuLogo'
 import {LanguageToggle} from './LanguageToggle'
@@ -21,8 +21,6 @@ type SiteHeaderProps = {
   /** Mobile: hide About link entirely. */
   showMobileAbout?: boolean
   labels?: Record<TranslationKey, string>
-  locale?: Locale
-  onLocaleChange?: (locale: Locale) => void
 }
 
 export function SiteHeader({
@@ -34,8 +32,6 @@ export function SiteHeader({
   mobileAboutOnLeft = false,
   showMobileAbout = true,
   labels,
-  locale,
-  onLocaleChange,
 }: SiteHeaderProps) {
   const language = useOptionalLanguage()
   const t = (key: TranslationKey) =>
@@ -70,14 +66,10 @@ export function SiteHeader({
   if (variant === 'desktop') {
     return (
       <div
-        className={`absolute right-6 top-8 z-20 flex items-center gap-6 font-light leading-none 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${landingDesktopBodyTextClass} ${textClass}`}
+        className={`pointer-events-auto absolute right-6 top-8 z-30 flex items-center gap-6 font-light leading-none 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${landingDesktopBodyTextClass} ${textClass}`}
       >
         {renderAboutLabel()}
-        <LanguageToggle
-          theme={theme}
-          locale={locale}
-          onLocaleChange={onLocaleChange}
-        />
+        <LanguageToggle theme={theme} />
       </div>
     )
   }
@@ -98,11 +90,7 @@ export function SiteHeader({
 
       <div className="flex shrink-0 items-center justify-self-end gap-2 text-[12px] font-light leading-none">
         {showMobileAbout && !mobileAboutOnLeft ? renderAboutLabel() : null}
-        <LanguageToggle
-          theme={theme}
-          locale={locale}
-          onLocaleChange={onLocaleChange}
-        />
+        <LanguageToggle theme={theme} />
       </div>
     </header>
   )

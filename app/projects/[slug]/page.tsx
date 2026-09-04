@@ -57,7 +57,5 @@ export default async function ProjectPage({params}: ProjectPageProps) {
     })
   }
 
-  return (
-    <ProjectDetailView project={prepared} initialLocale={locale} />
-  )
+  return <ProjectDetailView project={prepared} />
 }

@@ -2,6 +2,8 @@
 
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {SanityImage} from '@/components/SanityImage'
+import {useLanguage} from '@/components/landing/LanguageProvider'
+import {landingDesktopBodyTextClass} from '@/lib/layout/landingDesktopTypography'
 import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import {
   getGalleryImageAspectRatio,
@@ -11,7 +13,17 @@ import type {PreparedProject} from '@/lib/i18n/prepareProject'
 
 type ProjectDetailGalleryProps = {
   project: PreparedProject
-  onActiveIndexChange?: (index: number) => void
+}
+
+function getOffsetTopInContainer(
+  container: HTMLElement,
+  element: HTMLElement,
+): number {
+  return (
+    element.getBoundingClientRect().top -
+    container.getBoundingClientRect().top +
+    container.scrollTop
+  )
 }
 
 function getActiveGalleryIndex(
@@ -37,7 +49,7 @@ function getActiveGalleryIndex(
     const element = itemRefs.get(index)
     if (!element) continue
 
-    const top = element.offsetTop
+    const top = getOffsetTopInContainer(container, element)
     const bottom = top + element.offsetHeight
     const visibleTop = Math.max(top, viewTop)
     const visibleBottom = Math.min(bottom, viewBottom)
@@ -52,10 +64,8 @@ function getActiveGalleryIndex(
   return bestIndex
 }
 
-export function ProjectDetailGallery({
-  project,
-  onActiveIndexChange,
-}: ProjectDetailGalleryProps) {
+export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
+  const {t} = useLanguage()
   const scrollRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<Map<number, HTMLDivElement>>(new Map())
   const [activeIndex, setActiveIndex] = useState(0)
@@ -95,53 +105,63 @@ export function ProjectDetailGallery({
     }
   }, [images, updateActiveIndex])
 
-  useEffect(() => {
-    onActiveIndexChange?.(activeIndex)
-  }, [activeIndex, onActiveIndexChange])
-
   if (images.length === 0) {
     return <div className="h-full w-full bg-neutral-100" />
   }
 
   return (
-    <div className="relative h-full min-h-0 lg:absolute lg:inset-0">
+    <div className="absolute inset-0">
       <div
         ref={scrollRef}
-        className="h-full snap-y snap-proximity overflow-y-auto overscroll-contain scroll-smooth"
+        data-gallery-scroll
+        className="h-full snap-y snap-proximity overflow-y-auto overscroll-contain"
       >
-        {images.map((image, index) => {
-          const aspectRatio = getGalleryImageAspectRatio(image)
-          const displayWidth = sanityImageWidths.desktopGallery
-          const displayHeight = Math.round(displayWidth / aspectRatio)
-          const src = getSanityImageUrl(image, {
-            width: displayWidth,
-          })
-          if (!src) return null
+        <div className="grid grid-cols-[1.08fr_0.92fr]">
+          <div aria-hidden className="min-h-full" />
+          <div>
+            {images.map((image, index) => {
+              const aspectRatio = getGalleryImageAspectRatio(image)
+              const displayWidth = sanityImageWidths.desktopGallery
+              const displayHeight = Math.round(displayWidth / aspectRatio)
+              const src = getSanityImageUrl(image, {
+                width: displayWidth,
+              })
+              if (!src) return null
 
-          return (
-            <div
-              key={image._key ?? index}
-              data-index={index}
-              ref={(node) => {
-                if (node) itemRefs.current.set(index, node)
-                else itemRefs.current.delete(index)
-              }}
-              className="relative w-full shrink-0 snap-start bg-white"
-            >
-              <SanityImage
-                src={src}
-                alt={image.alt ?? `${project.title ?? 'Project'} image ${index + 1}`}
-                width={displayWidth}
-                height={displayHeight}
-                className="h-auto w-full pb-1"
-                sizes="45vw"
-                priority={index === 0}
-                onLoad={updateActiveIndex}
-              />
-            </div>
-          )
-        })}
+              return (
+                <div
+                  key={image._key ?? index}
+                  data-index={index}
+                  ref={(node) => {
+                    if (node) itemRefs.current.set(index, node)
+                    else itemRefs.current.delete(index)
+                  }}
+                  className="relative w-full shrink-0 snap-start bg-white"
+                >
+                  <SanityImage
+                    src={src}
+                    alt={
+                      image.alt ?? `${project.title ?? 'Project'} image ${index + 1}`
+                    }
+                    width={displayWidth}
+                    height={displayHeight}
+                    className="h-auto w-full pb-1"
+                    sizes="45vw"
+                    priority={index === 0}
+                    onLoad={updateActiveIndex}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
+
+      <p
+        className={`pointer-events-none absolute bottom-17 right-6 z-20 font-light leading-none text-white 3xl:bottom-10 3xl:right-8 ${landingDesktopBodyTextClass}`}
+      >
+        {activeIndex + 1}/{images.length} {t('images')}
+      </p>
     </div>
   )
 }

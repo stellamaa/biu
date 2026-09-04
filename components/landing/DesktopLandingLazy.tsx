@@ -2,8 +2,6 @@
 
 import {useSyncExternalStore} from 'react'
 import dynamic from 'next/dynamic'
-import type {Locale} from '@/lib/i18n/translations'
-import {LanguageProvider} from './LanguageProvider'
 import type {LandingProject} from '@/types/schema'
 
 const DesktopLanding = dynamic(
@@ -14,7 +12,6 @@ const DesktopLanding = dynamic(
 
 type DesktopLandingLazyProps = {
   projects: LandingProject[]
-  initialLocale: Locale
 }
 
 function subscribe(onChange: () => void) {
@@ -31,10 +28,7 @@ function getServerSnapshot() {
   return false
 }
 
-export function DesktopLandingLazy({
-  projects,
-  initialLocale,
-}: DesktopLandingLazyProps) {
+export function DesktopLandingLazy({projects}: DesktopLandingLazyProps) {
   const isDesktop = useSyncExternalStore(
     subscribe,
     getDesktopSnapshot,
@@ -43,9 +37,5 @@ export function DesktopLandingLazy({
 
   if (!isDesktop) return null
 
-  return (
-    <LanguageProvider initialLocale={initialLocale}>
-      <DesktopLanding projects={projects} />
-    </LanguageProvider>
-  )
+  return <DesktopLanding projects={projects} />
 }

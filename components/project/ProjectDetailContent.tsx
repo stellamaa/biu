@@ -1,12 +1,9 @@
 'use client'
 
-import {useState} from 'react'
 import {PageTopBar} from '@/components/site/PageTopBar'
 import {SiteHeader} from '@/components/landing/SiteHeader'
-import {useLanguage} from '@/components/landing/LanguageProvider'
 import {useCmsText} from '@/lib/i18n/useCmsText'
 import {desktopLeftColumnClass, desktopLeftMetaFixedClass} from '@/lib/layout/desktopLeftColumn'
-import {getProjectGalleryImages} from '@/lib/project/gallery'
 import {ProjectDetailGallery} from './ProjectDetailGallery'
 import {ProjectDetailMeta} from './ProjectDetailMeta'
 import {ProjectDetailMobile} from './ProjectDetailMobile'
@@ -16,16 +13,11 @@ type ProjectDetailContentProps = {
   project: PreparedProject
 }
 
-const desktopBlendClass = 'text-white mix-blend-difference'
-
 export function ProjectDetailContent({project}: ProjectDetailContentProps) {
-  const {t} = useLanguage()
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
-  const images = getProjectGalleryImages(project)
-  const description = useCmsText(
-    project.description,
-    project.descriptionDisplay,
-  )
+  const description = useCmsText(project.description, {
+    initialDisplay: project.descriptionDisplay,
+    preparedLocale: project.descriptionLocale,
+  })
 
   return (
     <>
@@ -33,59 +25,54 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
         <ProjectDetailMobile project={project} />
       </div>
 
-      <div className="hidden min-h-dvh bg-white lg:grid lg:h-dvh lg:grid-cols-[1.08fr_0.92fr]">
-        <section className="relative flex min-h-0 flex-col bg-white lg:min-h-dvh">
-          <PageTopBar
-            theme="light"
-            currentPage="home"
-            variant="desktop"
-            showDesktopNav={false}
-            logoHref="/"
-            alignWithContent
-            showLandscapeLabel={false}
-            topLeft={
-              <h1 className="text-base font-base leading-snug text-black 3xl:text-xl">
-                {project.title}
-              </h1>
-            }
-          />
+      <div className="relative hidden h-dvh overflow-hidden bg-white lg:block">
+        <ProjectDetailGallery project={project} />
 
-          <div className={`${desktopLeftColumnClass} relative min-h-0 flex-1`}>
-            <div className="relative z-10 min-h-0 overflow-y-auto">
+        <div className="pointer-events-none absolute inset-0 z-10 grid h-dvh grid-cols-[1.08fr_0.92fr]">
+          <section className="relative flex min-h-0 flex-col bg-white">
+            <PageTopBar
+              theme="light"
+              currentPage="home"
+              variant="desktop"
+              showDesktopNav={false}
+              logoHref="/"
+              alignWithContent
+              showLandscapeLabel={false}
+              topLeft={
+                <h1 className="pointer-events-none text-base font-base leading-snug text-black 3xl:text-xl">
+                  {project.title}
+                </h1>
+              }
+            />
+
+            <div
+              className={`${desktopLeftColumnClass} pointer-events-none relative min-h-0 flex-1 overflow-hidden`}
+            >
               {description ? (
                 <div className="mt-10 shrink-0">
-                  <p className="max-w-[82%] whitespace-pre-line text-sm leading-snug text-black md:text-base 3xl:text-xl">
+                  <p className="pointer-events-none max-w-[82%] whitespace-pre-line text-[12px] leading-tight text-black 3xl:text-lg">
                     {description}
                   </p>
                 </div>
               ) : null}
             </div>
-          </div>
 
-          <div className={`${desktopLeftMetaFixedClass} pointer-events-none`}>
-            <ProjectDetailMeta
-              location={project.location}
-              size={project.size}
-              year={project.year}
-              finalizado={project.finalizado}
-            />
-          </div>
-        </section>
+            <div className={`${desktopLeftMetaFixedClass} pointer-events-none`}>
+              <ProjectDetailMeta
+                location={project.location}
+                size={project.size}
+                year={project.year}
+                finalizado={project.finalizado}
+              />
+            </div>
+          </section>
 
-        <section className="relative min-h-0 lg:min-h-dvh">
-          <SiteHeader variant="desktop" theme="light" currentPage="home" />
-          <ProjectDetailGallery
-            project={project}
-            onActiveIndexChange={setActiveImageIndex}
-          />
-          {images.length > 0 ? (
-            <p
-              className={`pointer-events-none absolute bottom-17 right-6 z-20 hidden text-xs lg:block 3xl:bottom-10 3xl:right-8 3xl:text-base ${desktopBlendClass}`}
-            >
-              {activeImageIndex + 1}/{images.length} {t('images')}
-            </p>
-          ) : null}
-        </section>
+          <section className="relative">
+            <div className="pointer-events-auto">
+              <SiteHeader variant="desktop" theme="light" currentPage="home" />
+            </div>
+          </section>
+        </div>
       </div>
     </>
   )

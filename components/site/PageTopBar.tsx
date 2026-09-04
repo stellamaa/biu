@@ -65,14 +65,14 @@ export function PageTopBar({
       : `pointer-events-none fixed bottom-8 z-20 hidden lg:block 3xl:bottom-10 4xl:bottom-14 ${bottomLeftClass}`
 
   return (
-    <div className="relative shrink-0">
-      <div className="fixed left-1/2 top-8 z-30 hidden -translate-x-1/2 lg:block 3xl:top-10 4xl:top-14">
+    <div className="relative shrink-0 pointer-events-none">
+      <div className="pointer-events-auto fixed left-1/2 top-8 z-30 hidden -translate-x-1/2 lg:block 3xl:top-10 4xl:top-14">
         <BiuLogo href={logoHref} className={logoClass} />
       </div>
 
       {topLeft ? (
         <div
-          className={`fixed top-8 z-30 hidden max-w-[min(40vw,24rem)] pr-6 lg:block 3xl:top-10 4xl:top-14 ${topLeftClass}`}
+          className={`pointer-events-none fixed top-8 z-30 hidden max-w-[min(40vw,24rem)] pr-6 lg:block 3xl:top-10 4xl:top-14 ${topLeftClass}`}
         >
           {topLeft}
         </div>
@@ -90,7 +90,9 @@ export function PageTopBar({
       ) : null}
 
       {showDesktopNav ? (
-        <SiteHeader variant="desktop" theme={theme} currentPage={currentPage} />
+        <div className="pointer-events-auto">
+          <SiteHeader variant="desktop" theme={theme} currentPage={currentPage} />
+        </div>
       ) : null}
     </div>
   )

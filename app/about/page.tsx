@@ -11,5 +11,5 @@ export default async function AboutPage() {
   const about = await sanityClient.fetch(aboutPageQuery)
   const prepared = await prepareAboutPage(about, locale)
 
-  return <AboutView about={prepared} initialLocale={locale} />
+  return <AboutView about={prepared} />
 }

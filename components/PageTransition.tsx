@@ -110,8 +110,32 @@ export function PageTransition({children}: PageTransitionProps) {
     }
   }, [pathname, router])
 
+  const isAboutPage = pathname.startsWith('/about')
+  const pageBackgroundClass = isAboutPage ? 'bg-about-bg' : 'bg-white'
+
+  useEffect(() => {
+    const root = document.documentElement
+    const {body} = document
+
+    if (isAboutPage) {
+      root.classList.add('page-about')
+      body.classList.add('page-about')
+      body.style.overflow = 'hidden'
+    } else {
+      root.classList.remove('page-about')
+      body.classList.remove('page-about')
+      body.style.overflow = ''
+    }
+
+    return () => {
+      root.classList.remove('page-about')
+      body.classList.remove('page-about')
+      body.style.overflow = ''
+    }
+  }, [isAboutPage])
+
   if (skipTransition) {
-    return <div className="min-h-full flex-1">{children}</div>
+    return <div className={`min-h-full flex-1 ${pageBackgroundClass}`}>{children}</div>
   }
 
   const fadeOut = isFadingOut ? 'animate-page-fade-out' : ''
@@ -124,7 +148,9 @@ export function PageTransition({children}: PageTransitionProps) {
 
   return (
     <div
-      className={`flex min-h-full flex-1 flex-col bg-white ${fadeOut} ${fadeIn}`}
+      className={`flex min-h-full flex-1 flex-col ${pageBackgroundClass} ${
+        isAboutPage ? 'h-dvh overflow-hidden' : ''
+      } ${fadeOut} ${fadeIn}`}
     >
       {children}
     </div>
