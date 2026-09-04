@@ -5,10 +5,12 @@ import {useCallback, useRef, useState} from 'react'
 import {SanityImage} from '@/components/SanityImage'
 import {SiteHeader} from '@/components/landing/SiteHeader'
 import {useLanguage} from '@/components/landing/LanguageProvider'
-import {useCmsText} from '@/lib/i18n/useCmsText'
+import {useCmsPortableText} from '@/lib/i18n/useCmsPortableText'
+import {portableTextHasContent} from '@/lib/i18n/portableText'
 import {getSanityImageUrl, sanityImageWidths} from '@/sanity/lib/image'
 import {getProjectGalleryImages} from '@/lib/project/gallery'
 import type {PreparedProject} from '@/lib/i18n/prepareProject'
+import {ProjectDescription} from './ProjectDescription'
 
 type ProjectDetailMobileProps = {
   project: PreparedProject
@@ -19,10 +21,11 @@ const mobileBlendClass = 'text-white mix-blend-difference'
 
 export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
   const {t} = useLanguage()
-  const description = useCmsText(project.description, {
+  const description = useCmsPortableText(project.description, {
     initialDisplay: project.descriptionDisplay,
     preparedLocale: project.descriptionLocale,
   })
+  const hasDescription = portableTextHasContent(description)
   const [infoOpen, setInfoOpen] = useState(false)
   const [activeInfoIndex, setActiveInfoIndex] = useState(0)
   const galleryRef = useRef<HTMLDivElement>(null)
@@ -88,7 +91,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
         logoHref="/"
         showMobileAbout={false}
         mobileTopLeft={
-          description ? (
+          hasDescription ? (
             <button
               type="button"
               onClick={handleToggleInfo}
@@ -156,7 +159,7 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
           )}
         </div>
 
-        {infoOpen && description ? (
+        {infoOpen && hasDescription ? (
           <div className="absolute inset-0 z-20 flex flex-col overflow-hidden bg-white/40">
             <button
               type="button"
@@ -177,9 +180,10 @@ export function ProjectDetailMobile({project}: ProjectDetailMobileProps) {
               className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-5 pb-8 pt-16 [-webkit-overflow-scrolling:touch] touch-pan-y"
               onTouchMove={(event) => event.stopPropagation()}
             >
-              <p className="whitespace-pre-line text-sm leading-relaxed tracking-[0.04em] text-black">
-                {description}
-              </p>
+              <ProjectDescription
+                value={description}
+                paragraphClassName="text-sm leading-relaxed tracking-[0.04em] text-black [&+&]:mt-4"
+              />
             </div>
           </div>
         ) : null}

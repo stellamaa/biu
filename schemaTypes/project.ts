@@ -1,5 +1,6 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {ProjectsIcon} from '@sanity/icons'
+import {projectDescriptionField} from './shared/projectDescriptionBlock'
 import {imageWithHotspot} from './shared/imageFields'
 
 export const project = defineType({
@@ -69,13 +70,7 @@ export const project = defineType({
         }),
       ],
     }),
-    defineField({
-      name: 'description',
-      title: 'Project description',
-      type: 'text',
-      rows: 5,
-      validation: (rule) => rule.required(),
-    }),
+    projectDescriptionField,
     defineField({
       name: 'finalizado',
       title: 'Finalizado',

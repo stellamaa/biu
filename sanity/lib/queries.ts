@@ -1,5 +1,5 @@
 import {defineQuery} from 'next-sanity'
-import {galleryImageFields, imageFields} from './fragments'
+import {galleryImageFields, imageFields, projectDescriptionFields} from './fragments'
 
 export const landingProjectsQuery = defineQuery(/* groq */ `
   *[_type == "project"] | order(_createdAt desc) {
@@ -30,7 +30,7 @@ export const projectsQuery = defineQuery(/* groq */ `
     location,
     size,
     year,
-    description,
+    ${projectDescriptionFields},
     finalizado,
     mainImage {
       ${imageFields}
@@ -58,7 +58,7 @@ export const projectBySlugQuery = defineQuery(/* groq */ `
     location,
     size,
     year,
-    description,
+    ${projectDescriptionFields},
     finalizado,
     mainImage {
       ${imageFields}

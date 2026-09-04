@@ -16,3 +16,13 @@ export const galleryImageFields = /* groq */ `
   _key,
   ${imageFields}
 `
+
+/** Portable Text paragraphs for project descriptions. */
+export const projectDescriptionFields = /* groq */ `
+  description[]{
+    ...,
+    markDefs[]{
+      ...
+    }
+  }
+`

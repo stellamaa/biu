@@ -96,7 +96,20 @@ export type Project = {
     _type: "image";
     _key: string;
   }>;
-  description?: string;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
   finalizado?: boolean;
   mapImage?: {
     asset?: SanityImageAssetReference;
@@ -276,7 +289,7 @@ export type LandingProjectsQueryResult = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: projectsQuery
-// Query: *[_type == "project"] | order(_createdAt desc) {    _id,    _type,    _createdAt,    _updatedAt,    title,    slug,    location,    size,    year,    description,    finalizado,    mainImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    sketchImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    mapImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    imageGallery[] {        _key,    asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
+// Query: *[_type == "project"] | order(_createdAt desc) {    _id,    _type,    _createdAt,    _updatedAt,    title,    slug,    location,    size,    year,      description[]{    ...,    markDefs[]{      ...    }  },    finalizado,    mainImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    sketchImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    mapImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    imageGallery[] {        _key,    asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
 export type ProjectsQueryResult = Array<{
   _id: string;
   _type: "project";
@@ -287,7 +300,20 @@ export type ProjectsQueryResult = Array<{
   location: string | null;
   size: string | null;
   year: string | null;
-  description: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs: null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
   finalizado: boolean | null;
   mainImage: {
     asset: {
@@ -362,7 +388,7 @@ export type ProjectsQueryResult = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: projectBySlugQuery
-// Query: *[_type == "project" && (slug.current == $slug || _id == $slug)][0] {    _id,    _type,    _createdAt,    _updatedAt,    title,    slug,    location,    size,    year,    description,    finalizado,    mainImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    sketchImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    mapImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    imageGallery[] {        _key,    asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
+// Query: *[_type == "project" && (slug.current == $slug || _id == $slug)][0] {    _id,    _type,    _createdAt,    _updatedAt,    title,    slug,    location,    size,    year,      description[]{    ...,    markDefs[]{      ...    }  },    finalizado,    mainImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    sketchImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    mapImage {        asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    },    imageGallery[] {        _key,    asset->{    _id,    url,    metadata {      lqip,      dimensions { width, height, aspectRatio }    }  },  alt,  hotspot,  crop    }  }
 export type ProjectBySlugQueryResult = {
   _id: string;
   _type: "project";
@@ -373,7 +399,20 @@ export type ProjectBySlugQueryResult = {
   location: string | null;
   size: string | null;
   year: string | null;
-  description: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs: null;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
   finalizado: boolean | null;
   mainImage: {
     asset: {
@@ -484,8 +523,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "project"] | order(_createdAt desc) {\n    _id,\n    title,\n    slug,\n    location,\n    size,\n    year,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    }\n  }\n': LandingProjectsQueryResult;
-    '\n  *[_type == "project"] | order(_createdAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    slug,\n    location,\n    size,\n    year,\n    description,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectsQueryResult;
-    '\n  *[_type == "project" && (slug.current == $slug || _id == $slug)][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    slug,\n    location,\n    size,\n    year,\n    description,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectBySlugQueryResult;
+    '\n  *[_type == "project"] | order(_createdAt desc) {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    slug,\n    location,\n    size,\n    year,\n    \n  description[]{\n    ...,\n    markDefs[]{\n      ...\n    }\n  }\n,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectsQueryResult;
+    '\n  *[_type == "project" && (slug.current == $slug || _id == $slug)][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    slug,\n    location,\n    size,\n    year,\n    \n  description[]{\n    ...,\n    markDefs[]{\n      ...\n    }\n  }\n,\n    finalizado,\n    mainImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    sketchImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    mapImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    },\n    imageGallery[] {\n      \n  _key,\n  \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n\n    }\n  }\n': ProjectBySlugQueryResult;
     '\n  *[_type == "aboutPage" && _id == "aboutPage"][0] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    aboutBiuTitle,\n    biuFoundedYear,\n    biuDescription,\n    email,\n    telephone1,\n    telephone2,\n    aboutImage {\n      \n  asset->{\n    _id,\n    url,\n    metadata {\n      lqip,\n      dimensions { width, height, aspectRatio }\n    }\n  },\n  alt,\n  hotspot,\n  crop\n\n    }\n  }\n': AboutPageQueryResult;
   }
 }
