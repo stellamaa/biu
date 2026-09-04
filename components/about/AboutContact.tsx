@@ -19,7 +19,7 @@ export function AboutContact({
 
   return (
     <div
-      className={`space-y-1 text-sm leading-snug text-about-accent lg:text-[12px] lg:leading-tight 3xl:space-y-2 3xl:text-lg ${className}`}
+      className={`space-y-1 text-sm leading-snug text-about-accent lg:text-sm lg:leading-tight 3xl:space-y-2 3xl:text-2xl ${className}`}
     >
       {email ? (
         <a href={`mailto:${email}`} className="block hover:opacity-70">

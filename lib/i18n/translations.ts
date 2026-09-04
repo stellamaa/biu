@@ -19,7 +19,7 @@ export const translations = {
     founded: 'Fundada en',
     finalizado: 'Finalizado',
     images: 'imágenes',
-    projectInfo: 'Información proyecto',
+    projectInfo: 'Info proyecto',
   },
 } as const
 

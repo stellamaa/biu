@@ -158,7 +158,7 @@ export function ProjectDetailGallery({project}: ProjectDetailGalleryProps) {
       </div>
 
       <p
-        className={`pointer-events-none absolute bottom-17 right-6 z-20 font-light leading-none text-white 3xl:bottom-10 3xl:right-8 ${landingDesktopBodyTextClass}`}
+        className={`pointer-events-none absolute bottom-17 right-6 z-20 font-light leading-none text-white 3xl:bottom-18 3xl:right-14 4xl:bottom-10 4xl:right-8 ${landingDesktopBodyTextClass}`}
       >
         {activeIndex + 1}/{images.length} {t('images')}
       </p>

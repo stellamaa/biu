@@ -37,9 +37,10 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
               showDesktopNav={false}
               logoHref="/"
               alignWithContent
+              matchAboutHeaderAt3xl
               showLandscapeLabel={false}
               topLeft={
-                <h1 className="pointer-events-none text-base font-base leading-snug text-black 3xl:text-xl">
+                <h1 className="pointer-events-none text-base font-base leading-snug text-black 3xl:text-3xl 4xl:text-xl">
                   {project.title}
                 </h1>
               }
@@ -49,8 +50,8 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
               className={`${desktopLeftColumnClass} pointer-events-none relative min-h-0 flex-1 overflow-hidden`}
             >
               {description ? (
-                <div className="mt-10 shrink-0">
-                  <p className="pointer-events-none max-w-[82%] whitespace-pre-line text-[12px] leading-tight text-black 3xl:text-lg">
+                <div className="mt-10 shrink-0 3xl:pt-35 4xl:pt-0">
+                  <p className="pointer-events-none max-w-[82%] whitespace-pre-line text-[12px] md:text-sm leading-tight text-black 3xl:pl-5 3xl:text-2xl 3xl:leading-tight 4xl:pl-0 4xl:text-lg">
                     {description}
                   </p>
                 </div>
@@ -69,7 +70,12 @@ export function ProjectDetailContent({project}: ProjectDetailContentProps) {
 
           <section className="relative">
             <div className="pointer-events-auto">
-              <SiteHeader variant="desktop" theme="light" currentPage="home" />
+              <SiteHeader
+                variant="desktop"
+                theme="light"
+                currentPage="home"
+                matchAboutHeaderAt3xl
+              />
             </div>
           </section>
         </div>

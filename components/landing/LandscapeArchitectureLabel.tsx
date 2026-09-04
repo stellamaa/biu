@@ -1,6 +1,9 @@
 'use client'
 
-import {landingDesktopLabelTextClass} from '@/lib/layout/landingDesktopTypography'
+import {
+  landingDesktopHeaderLabelTextClass,
+  landingDesktopLabelTextClass,
+} from '@/lib/layout/landingDesktopTypography'
 import {translations} from '@/lib/i18n/translations'
 import {useOptionalLanguage} from './LanguageProvider'
 
@@ -9,6 +12,7 @@ type LandscapeArchitectureLabelProps = {
   theme?: 'light' | 'about'
   overlay?: boolean
   text?: string
+  matchAboutHeaderAt3xl?: boolean
 }
 
 export function LandscapeArchitectureLabel({
@@ -16,6 +20,7 @@ export function LandscapeArchitectureLabel({
   theme = 'light',
   overlay = false,
   text,
+  matchAboutHeaderAt3xl = false,
 }: LandscapeArchitectureLabelProps) {
   const language = useOptionalLanguage()
   const label =
@@ -31,7 +36,9 @@ export function LandscapeArchitectureLabel({
         className={`${
           theme === 'about'
             ? 'text-base leading-none tracking-wide 3xl:text-3xl 4xl:text-4xl'
-            : landingDesktopLabelTextClass
+            : matchAboutHeaderAt3xl
+              ? landingDesktopHeaderLabelTextClass
+              : landingDesktopLabelTextClass
         } ${colorClass}`}
       >
         {label}

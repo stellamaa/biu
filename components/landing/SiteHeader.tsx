@@ -1,6 +1,10 @@
 'use client'
 
-import {landingDesktopBodyTextClass} from '@/lib/layout/landingDesktopTypography'
+import {
+  landingDesktopBodyTextClass,
+  landingDesktopHeaderNavPositionClass,
+  landingDesktopHeaderNavTextClass,
+} from '@/lib/layout/landingDesktopTypography'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import type {TranslationKey} from '@/lib/i18n/translations'
@@ -20,6 +24,8 @@ type SiteHeaderProps = {
   mobileAboutOnLeft?: boolean
   /** Mobile: hide About link entirely. */
   showMobileAbout?: boolean
+  /** At 3xl only, match about page header sizes and placement. */
+  matchAboutHeaderAt3xl?: boolean
   labels?: Record<TranslationKey, string>
 }
 
@@ -31,6 +37,7 @@ export function SiteHeader({
   mobileTopLeft,
   mobileAboutOnLeft = false,
   showMobileAbout = true,
+  matchAboutHeaderAt3xl = false,
   labels,
 }: SiteHeaderProps) {
   const language = useOptionalLanguage()
@@ -64,12 +71,19 @@ export function SiteHeader({
   }
 
   if (variant === 'desktop') {
+    const navPositionClass = matchAboutHeaderAt3xl
+      ? landingDesktopHeaderNavPositionClass
+      : '3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14'
+    const navTextClass = matchAboutHeaderAt3xl
+      ? landingDesktopHeaderNavTextClass
+      : landingDesktopBodyTextClass
+
     return (
       <div
-        className={`pointer-events-auto absolute right-6 top-8 z-30 flex items-center gap-6 font-light leading-none 3xl:right-8 3xl:top-10 3xl:gap-8 4xl:top-14 ${landingDesktopBodyTextClass} ${textClass}`}
+        className={`pointer-events-auto absolute right-6 top-8 z-30 flex items-center gap-6 font-light leading-none ${navPositionClass} ${navTextClass} ${textClass}`}
       >
         {renderAboutLabel()}
-        <LanguageToggle theme={theme} />
+        <LanguageToggle theme={theme} matchAboutHeaderAt3xl={matchAboutHeaderAt3xl} />
       </div>
     )
   }

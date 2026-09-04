@@ -21,7 +21,7 @@ export function AboutDescription({
 
   return (
     <p
-      className={`whitespace-pre-line text-sm leading-snug text-about-accent lg:text-[12px] lg:leading-tight 3xl:text-lg ${className}`}
+      className={`whitespace-pre-line text-sm leading-snug text-about-accent lg:text-sm text-sm lg:leading-tight 3xl:text-3xl 3xl:min-w-[2rem] 4xl:text-2xl 4xl:leading-tight ${className}`}
     >
       {text}
     </p>

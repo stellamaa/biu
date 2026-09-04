@@ -17,9 +17,6 @@ type DesktopLandingProps = {
   projects: LandingProject[]
 }
 
-/** Default list row height at lg; 4K uses min-height from item class. */
-const DESKTOP_LIST_ITEM_HEIGHT = 15
-
 export function DesktopLanding({projects}: DesktopLandingProps) {
   const [activeId, setActiveId] = useState(projects[0]?._id ?? '')
 
@@ -38,6 +35,7 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
           showDesktopNav={false}
           logoHref="/"
           alignWithContent
+          matchAboutHeaderAt3xl
           landscapeLabelPosition="top-left"
         />
 
@@ -48,8 +46,8 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
         </div>
 
         {projects.length > 0 ? (
-          <div className="desktop-landing-scroll pointer-events-auto absolute inset-x-0 bottom-0 top-[50vh] overflow-y-auto overscroll-none px-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:px-6 3xl:top-[44vh] 3xl:px-8">
-            <ul className="w-full space-y-0">
+          <div className="desktop-landing-scroll pointer-events-auto absolute inset-x-0 bottom-0 top-[50vh] overflow-y-auto overscroll-none px-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:px-6 3xl:top-[44vh] 3xl:px-10">
+            <ul className="w-full space-y-0 3xl:space-y-2 4xl:space-y-0">
               {projects.map((project, index) => (
                 <ProjectListItem
                   key={project._id}
@@ -58,7 +56,6 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
                   isActive={project._id === activeId}
                   variant="desktop"
                   onActivate={() => setActiveId(project._id)}
-                  style={{height: DESKTOP_LIST_ITEM_HEIGHT}}
                 />
               ))}
             </ul>
@@ -73,7 +70,12 @@ export function DesktopLanding({projects}: DesktopLandingProps) {
       </section>
 
       <section className="relative min-h-0">
-        <SiteHeader variant="desktop" theme="light" currentPage="home" />
+        <SiteHeader
+          variant="desktop"
+          theme="light"
+          currentPage="home"
+          matchAboutHeaderAt3xl
+        />
         <ProjectHeroImage
           project={activeProject}
           variant="desktop"

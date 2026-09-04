@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import {forwardRef, type CSSProperties} from 'react'
 import {getProjectPath} from '@/lib/project/url'
-import {desktopProjectListGridClass, desktopProjectListItemClass} from '@/lib/layout/desktopProjectListLayout'
+import {desktopProjectListGridClass, desktopProjectListItemClass, desktopProjectListRowClass} from '@/lib/layout/desktopProjectListLayout'
 import {useLanguage} from './LanguageProvider'
 import type {LandingProject} from '@/types/schema'
 
@@ -36,7 +36,7 @@ export const ProjectListItem = forwardRef<HTMLLIElement, ProjectListItemProps>(
       const number = String(index + 1).padStart(3, '0')
 
       return (
-        <li ref={ref} style={style}>
+        <li ref={ref} className={desktopProjectListRowClass} style={style}>
           <Link
             href={projectHref}
             onMouseEnter={onActivate}

@@ -2,6 +2,8 @@
 
 import {
   landingDesktopBodyTextClass,
+  landingDesktopHeaderNavTextClass,
+  landingDesktopHeaderToggleSizeClass,
   landingDesktopToggleSizeClass,
 } from '@/lib/layout/landingDesktopTypography'
 import type {Locale} from '@/lib/i18n/translations'
@@ -9,6 +11,7 @@ import {useLanguage} from './LanguageProvider'
 
 type LanguageToggleProps = {
   theme?: 'light' | 'about'
+  matchAboutHeaderAt3xl?: boolean
 }
 
 const LOCALE_LABELS: Record<Locale, string> = {
@@ -24,7 +27,10 @@ const labelStyle = {
 
 const LOCALE_ORDER: Locale[] = ['en', 'es']
 
-export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
+export function LanguageToggle({
+  theme = 'light',
+  matchAboutHeaderAt3xl = false,
+}: LanguageToggleProps) {
   const {locale, setLocale} = useLanguage()
   const isAbout = theme === 'about'
   const activeIndex = LOCALE_ORDER.indexOf(locale)
@@ -32,7 +38,15 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
 
   const trackSizeClass = isAbout
     ? '3xl:h-8 3xl:w-[6rem] 3xl:text-base'
-    : landingDesktopToggleSizeClass
+    : matchAboutHeaderAt3xl
+      ? landingDesktopHeaderToggleSizeClass
+      : landingDesktopToggleSizeClass
+
+  const textClass = isAbout
+    ? 'text-[12px]'
+    : matchAboutHeaderAt3xl
+      ? landingDesktopHeaderNavTextClass
+      : landingDesktopBodyTextClass
 
   const handleSelect = (code: Locale) => {
     setLocale(code)
@@ -41,7 +55,7 @@ export function LanguageToggle({theme = 'light'}: LanguageToggleProps) {
   return (
     <div
       translate="no"
-      className={`notranslate isolate relative inline-grid h-[1.5rem] w-[4.25rem] shrink-0 grid-cols-2 overflow-hidden rounded-full font-light leading-none touch-manipulation ${isAbout ? 'text-[12px]' : landingDesktopBodyTextClass} ${trackSizeClass} ${trackClass}`}
+      className={`notranslate isolate relative inline-grid h-[1.5rem] w-[4.25rem] shrink-0 grid-cols-2 overflow-hidden rounded-full font-light leading-none touch-manipulation ${textClass} ${trackSizeClass} ${trackClass}`}
       role="group"
       aria-label="Language"
     >

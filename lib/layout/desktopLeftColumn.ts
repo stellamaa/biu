@@ -6,6 +6,6 @@ export const desktopLeftIntroClass = 'mt-10'
 
 export const desktopLeftMetaClass = 'pt-30'
 
-/** Fixed bottom-left row — shared by project meta + landing project list. */
+/** Fixed bottom-left row — project meta on detail page. */
 export const desktopLeftMetaFixedClass =
-  'fixed bottom-18 left-5 z-20 hidden w-[calc(54vw-2.5rem)] lg:block lg:left-6 lg:w-[calc(54vw-3rem)] 3xl:bottom-10 3xl:left-8 3xl:w-[calc(54vw-4rem)]'
+  'fixed bottom-18 left-5 z-20 hidden w-[calc(54vw-2.5rem)] lg:block lg:left-6 lg:w-[calc(54vw-3rem)] 3xl:bottom-25 3xl:left-14 3xl:w-[calc(54vw-3.5rem)] 4xl:bottom-10 4xl:left-8 4xl:w-[calc(54vw-4rem)]'
